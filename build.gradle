@@ -1,0 +1,52 @@
+group "be.plutus"
+version "1.0.DEV"
+
+buildscript {
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:1.3.5.RELEASE")
+    }
+}
+
+buildscript {
+    repositories {
+        maven { url "https://plugins.gradle.org/m2/" }
+    }
+    dependencies {
+        classpath "gradle.plugin.com.boxfuse.client:flyway-release:4.0"
+    }
+}
+
+repositories {
+    mavenCentral()
+    maven { url "http://repo1.maven.org/maven2" }
+}
+
+ext {
+    hibernateValidationVersion = "5.2.4.Final"
+    springDataVersion = "1.9.2.RELEASE"
+    mysqlVersion = "5.1.38"
+    jacksonVersion = "2.7.4"
+}
+
+apply plugin: "java"
+apply plugin: "spring-boot"
+apply plugin: "org.flywaydb.flyway"
+
+bootRepackage {
+    mainClass = "be.plutus.api.Application"
+}
+
+dependencies {
+    compile project(":core")
+    compile "org.springframework.boot:spring-boot-starter-web"
+    compile "org.springframework.boot:spring-boot-starter-data-jpa"
+    compile "org.springframework.boot:spring-boot-starter-security"
+    compile "org.springframework.data:spring-data-jpa:$springDataVersion"
+    compile "org.hibernate:hibernate-validator:$hibernateValidationVersion"
+    compile "mysql:mysql-connector-java:$mysqlVersion"
+
+    testCompile "junit:junit:4.11"
+}
