@@ -1,14 +1,18 @@
 package be.plutus.api.response;
 
 import be.plutus.core.model.location.Institution;
+import com.fasterxml.jackson.annotation.JsonFormat;
+
+import java.util.Date;
 
 public class UserDTO{
 
     private int index;
     private String firstName;
     private String lastName;
-    private Institution institution;
     private String username;
+    private Institution institution;
+    private Date updated;
 
     public UserDTO(){
     }
@@ -37,6 +41,14 @@ public class UserDTO{
         this.lastName = lastName;
     }
 
+    public String getUsername(){
+        return username;
+    }
+
+    public void setUsername( String username ){
+        this.username = username;
+    }
+
     public Institution getInstitution(){
         return institution;
     }
@@ -45,11 +57,16 @@ public class UserDTO{
         this.institution = institution;
     }
 
-    public String getUsername(){
-        return username;
+    public Date getUpdated(){
+        return updated;
     }
 
-    public void setUsername( String username ){
-        this.username = username;
+    @JsonFormat( pattern = "yyyy-MM-dd'T'HH:mm:ssZ" )
+    public Date getUpdatedISO8601(){
+        return updated;
+    }
+
+    public void setUpdated( Date updated ){
+        this.updated = updated;
     }
 }

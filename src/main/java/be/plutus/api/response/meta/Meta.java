@@ -13,13 +13,13 @@ public class Meta{
         return requestTimestamp;
     }
 
-    public void setRequestTimestamp( Date requestTimestamp ){
-        this.requestTimestamp = requestTimestamp;
-    }
-
     @JsonFormat( pattern = "yyyy-MM-dd'T'HH:mm:ssZ" )
     public Date getRequestTimestampISO8601(){
         return requestTimestamp;
+    }
+
+    public void setRequestTimestamp( Date requestTimestamp ){
+        this.requestTimestamp = requestTimestamp;
     }
 
     public int getResponseStatusCode(){

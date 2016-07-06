@@ -5,7 +5,6 @@ import be.plutus.core.model.currency.Currency;
 public class AccountMeta extends Meta{
 
     private String account;
-
     private Currency currency;
 
     public AccountMeta(){

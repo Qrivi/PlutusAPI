@@ -2,22 +2,15 @@ package be.plutus.api.response;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
-public class TokenDTO{
+import java.util.Date;
 
-    private String token;
+public class SessionDTO{
+
     private String application;
     private String device;
-    private String expires;
+    private Date expires;
 
-    public TokenDTO(){
-    }
-
-    public String getToken(){
-        return token;
-    }
-
-    public void setToken( String token ){
-        this.token = token;
+    public SessionDTO(){
     }
 
     public String getApplication(){
@@ -36,16 +29,16 @@ public class TokenDTO{
         this.device = device;
     }
 
-    public String getExpires(){
+    public Date getExpires(){
         return expires;
     }
 
     @JsonFormat( pattern = "yyyy-MM-dd'T'HH:mm:ssZ" )
-    public String getExpiresISO8601(){
+    public Date getExpiresISO8601(){
         return expires;
     }
 
-    public void setExpires( String expires ){
+    public void setExpires( Date expires ){
         this.expires = expires;
     }
 }
