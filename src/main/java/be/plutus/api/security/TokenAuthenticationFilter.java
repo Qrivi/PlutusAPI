@@ -48,10 +48,10 @@ public class TokenAuthenticationFilter extends GenericFilterBean{
                     throw new TokenNotFoundException();
 
                 if( tokenHeader != null )
-                    token = tokenService.getToken( tokenHeader );;
+                    token = tokenService.getToken( tokenHeader );
 
                 if( tokenParameter != null )
-                    token = tokenService.getToken( tokenParameter );;
+                    token = tokenService.getToken( tokenParameter );
 
                 if( isValid( token ) ){
                     tokenService.extendToken( token );
