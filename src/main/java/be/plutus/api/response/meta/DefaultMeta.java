@@ -1,67 +1,70 @@
 package be.plutus.api.response.meta;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import java.util.Date;
 
 public class DefaultMeta{
 
-    private int statusCode;
-    private Date timestampRequest;
+    @JsonFormat( pattern = "yyyy-MM-dd'T'HH:mm:ssZ" )
+    private Date requestTimestamp;
+    private int responseStatusCode;
 
     public static DefaultMeta success(){
         DefaultMeta meta = new DefaultMeta();
-        meta.setStatusCode( 200 );
-        meta.setTimestampRequest( new Date() );
+        meta.setResponseStatusCode( 200 );
+        meta.setRequestTimestamp( new Date() );
         return meta;
     }
 
     public static DefaultMeta badRequest(){
         DefaultMeta meta = new DefaultMeta();
-        meta.setStatusCode( 400 );
-        meta.setTimestampRequest( new Date() );
+        meta.setResponseStatusCode( 400 );
+        meta.setRequestTimestamp( new Date() );
         return meta;
     }
 
     public static DefaultMeta unauthorized(){
         DefaultMeta meta = new DefaultMeta();
-        meta.setStatusCode( 401 );
-        meta.setTimestampRequest( new Date() );
+        meta.setResponseStatusCode( 401 );
+        meta.setRequestTimestamp( new Date() );
         return meta;
     }
 
     public static DefaultMeta forbidden(){
         DefaultMeta meta = new DefaultMeta();
-        meta.setStatusCode( 403 );
-        meta.setTimestampRequest( new Date() );
+        meta.setResponseStatusCode( 403 );
+        meta.setRequestTimestamp( new Date() );
         return meta;
     }
 
     public static DefaultMeta serverError(){
         DefaultMeta meta = new DefaultMeta();
-        meta.setStatusCode( 500 );
-        meta.setTimestampRequest( new Date() );
+        meta.setResponseStatusCode( 500 );
+        meta.setRequestTimestamp( new Date() );
         return meta;
     }
 
     public static DefaultMeta notFound(){
         DefaultMeta meta = new DefaultMeta();
-        meta.setStatusCode( 404 );
-        meta.setTimestampRequest( new Date() );
+        meta.setResponseStatusCode( 404 );
+        meta.setRequestTimestamp( new Date() );
         return meta;
     }
 
-    public int getStatusCode(){
-        return statusCode;
+    public int getResponseStatusCode(){
+        return responseStatusCode;
     }
 
-    public void setStatusCode( int statusCode ){
-        this.statusCode = statusCode;
+    public void setResponseStatusCode( int responseStatusCode ){
+        this.responseStatusCode = responseStatusCode;
     }
 
-    public Date getTimestampRequest(){
-        return timestampRequest;
+    public Date getRequestTimestamp(){
+        return requestTimestamp;
     }
 
-    public void setTimestampRequest( Date timestampRequest ){
-        this.timestampRequest = timestampRequest;
+    public void setRequestTimestamp( Date requestTimestamp ){
+        this.requestTimestamp = requestTimestamp;
     }
 }

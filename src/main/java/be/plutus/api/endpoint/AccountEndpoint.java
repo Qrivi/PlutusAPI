@@ -36,8 +36,8 @@ public class AccountEndpoint{
 
         AccountMeta accountMeta = new AccountMeta();
         accountMeta.setEmail( account.getEmail() );
-        accountMeta.setStatusCode( 200 );
-        accountMeta.setTimestampRequest( new Date() );
+        accountMeta.setResponseStatusCode( 200 );
+        accountMeta.setRequestTimestamp( new Date() );
 
         AccountDTO accountDTO = new AccountDTO();
         accountDTO.setEmail( account.getEmail() );

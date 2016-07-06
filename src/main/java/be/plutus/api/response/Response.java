@@ -7,9 +7,17 @@ import java.util.Collection;
 
 public class Response<M extends DefaultMeta, O extends Object>{
 
-    private Collection<String> errors;
     private M meta;
+    private Collection<String> errors;
     private O data;
+
+    public M getMeta(){
+        return meta;
+    }
+
+    public void setMeta( M meta ){
+        this.meta = meta;
+    }
 
     public Collection<String> getErrors(){
         return errors;
@@ -21,14 +29,6 @@ public class Response<M extends DefaultMeta, O extends Object>{
 
     public void setErrors( Collection<String> errors ){
         this.errors = errors;
-    }
-
-    public M getMeta(){
-        return meta;
-    }
-
-    public void setMeta( M meta ){
-        this.meta = meta;
     }
 
     public O getData(){
