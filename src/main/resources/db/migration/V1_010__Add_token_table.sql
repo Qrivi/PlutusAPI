@@ -3,6 +3,7 @@ CREATE TABLE IF NOT EXISTS `token` (
   `token` VARCHAR(255) NOT NULL,
   `user_agent` VARCHAR(255),
   `expiry_date` DATETIME NOT NULL,
+  `created_on` DATETIME NOT NULL,
   `active` TINYINT(1) NOT NULL,
   `account_id` INT NOT NULL,
   PRIMARY KEY (`id`),
