@@ -1,17 +1,39 @@
 package be.plutus.api.response.meta;
 
-public class UserMeta{
+import com.fasterxml.jackson.annotation.JsonFormat;
 
-    private String username;
+import java.util.Date;
+
+public class UserMeta extends AccountMeta{
+
+    private String user;
+
+    private Date updated;
+
+    @JsonFormat( pattern = "yyyy-MM-dd'T'HH:mm:ssZ" )
+    private Date updatedISO8601;
 
     public UserMeta(){
     }
 
-    public String getUsername(){
-        return username;
+    public String getUser(){
+        return user;
     }
 
-    public void setUsername( String username ){
-        this.username = username;
+    public void setUser( String user ){
+        this.user = user; //User.username
+    }
+
+    public Date getUpdated(){
+        return updated;
+    }
+
+    public void setUpdated( Date updated ){
+        this.updated = updated;
+        this.updatedISO8601 = updated;
+    }
+
+    public Date getUpdatedISO8601(){
+        return updatedISO8601;
     }
 }

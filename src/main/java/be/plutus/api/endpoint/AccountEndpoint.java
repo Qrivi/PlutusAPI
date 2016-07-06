@@ -4,6 +4,7 @@ import be.plutus.api.response.AccountDTO;
 import be.plutus.api.response.Response;
 import be.plutus.api.response.UserDTO;
 import be.plutus.api.response.meta.AccountMeta;
+import be.plutus.api.response.meta.Meta;
 import be.plutus.core.model.account.Account;
 import be.plutus.core.service.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,15 +30,14 @@ public class AccountEndpoint{
     AccountService accountService;
 
     @RequestMapping( method = RequestMethod.GET )
-    public ResponseEntity<Response<AccountMeta, AccountDTO>> get( Authentication authentication ){
+    public ResponseEntity<Response<Meta, AccountDTO>> get( Authentication authentication ){
         Account account = accountService.getAccount( (String)authentication.getPrincipal() );
 
-        Response<AccountMeta, AccountDTO> response = new Response<>();
+        Response<Meta, AccountDTO> response = new Response<>();
 
-        AccountMeta accountMeta = new AccountMeta();
-        accountMeta.setEmail( account.getEmail() );
-        accountMeta.setResponseStatusCode( 200 );
-        accountMeta.setRequestTimestamp( new Date() );
+        AccountMeta meta = new AccountMeta();
+        meta.setResponseStatusCode( 200 );
+        meta.setRequestTimestamp( new Date() );
 
         AccountDTO accountDTO = new AccountDTO();
         accountDTO.setEmail( account.getEmail() );
@@ -51,7 +51,7 @@ public class AccountEndpoint{
             return userDTO;
         } ).collect( Collectors.toList() ) );
 
-        response.setMeta( accountMeta );
+        response.setMeta( meta );
         response.setData( accountDTO );
 
         return new ResponseEntity<>( response, HttpStatus.OK );

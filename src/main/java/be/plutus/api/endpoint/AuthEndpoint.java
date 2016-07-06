@@ -3,7 +3,7 @@ package be.plutus.api.endpoint;
 import be.plutus.api.request.AuthenticationDTO;
 import be.plutus.api.response.Response;
 import be.plutus.api.response.TokenDTO;
-import be.plutus.api.response.meta.DefaultMeta;
+import be.plutus.api.response.meta.Meta;
 import be.plutus.api.util.MessageService;
 import be.plutus.core.model.account.Account;
 import be.plutus.core.model.account.AccountStatus;
@@ -47,14 +47,15 @@ public class AuthEndpoint{
     }
 
     @RequestMapping( method = RequestMethod.POST )
-    public ResponseEntity<Response<DefaultMeta, TokenDTO>> post(
+    public ResponseEntity<Response<Meta, TokenDTO>> post(
             @Valid @RequestBody AuthenticationDTO dto,
             BindingResult bindingResult,
             @RequestHeader( value = "User-Agent", required = false ) String userAgent ){
-        Response<DefaultMeta, TokenDTO> response = new Response<>();
+        Response<Meta, TokenDTO> response = new Response<>();
 
+        //TODO kan dit afgezonderd worden in hogere klasse om niet voor elk endpoint herhaald te moeten worden?
         if( bindingResult.hasErrors() ){
-            response.setMeta( DefaultMeta.badRequest() );
+            response.setMeta( Meta.badRequest() );
             response.setErrors( bindingResult.getAllErrors()
                     .stream()
                     .map( DefaultMessageSourceResolvable::getDefaultMessage )
@@ -66,19 +67,19 @@ public class AuthEndpoint{
         Account account = accountService.getAccount( dto.getEmail() );
 
         if( account == null ){
-            response.setMeta( DefaultMeta.badRequest() );
+            response.setMeta( Meta.badRequest() );
             response.setErrors( messageService.get( "NotValid.AuthEndpoint.email" ) );
             return new ResponseEntity<>( response, HttpStatus.BAD_REQUEST );
         }
 
         if( !account.isPasswordValid( dto.getPassword() ) ){
-            response.setMeta( DefaultMeta.badRequest() );
+            response.setMeta( Meta.badRequest() );
             response.setErrors( messageService.get( "NotValid.AuthEndpoint.password" ) );
             return new ResponseEntity<>( response, HttpStatus.BAD_REQUEST );
         }
 
         if( account.getStatus() != AccountStatus.ACTIVE ){
-            response.setMeta( DefaultMeta.forbidden() );
+            response.setMeta( Meta.forbidden() );
             response.setErrors( account.getStatus().getStatus() );
             return new ResponseEntity<>( response, HttpStatus.FORBIDDEN );
         }
@@ -88,7 +89,7 @@ public class AuthEndpoint{
         TokenDTO tokenDTO = new TokenDTO();
         tokenDTO.setToken( token.getToken() );
 
-        response.setMeta( DefaultMeta.success() );
+        response.setMeta( Meta.success() );
         response.setData( tokenDTO );
 
         return new ResponseEntity<>( response, HttpStatus.OK );

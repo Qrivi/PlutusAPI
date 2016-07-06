@@ -1,16 +1,29 @@
 package be.plutus.api.response.meta;
 
-public class AccountMeta extends DefaultMeta{
-    private String email;
+import be.plutus.core.model.currency.Currency;
+
+public class AccountMeta extends Meta{
+
+    private String account;
+
+    private Currency currency;
 
     public AccountMeta(){
     }
 
-    public String getEmail(){
-        return email;
+    public String getAccount(){
+        return account;
     }
 
-    public void setEmail( String email ){
-        this.email = email;
+    public void setAccount( String account ){
+        this.account = account; // Account.email
+    }
+
+    public Currency getCurrency(){
+        return currency;
+    }
+
+    public void setCurrency( Currency currency ){
+        this.currency = currency;
     }
 }

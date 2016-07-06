@@ -1,11 +1,11 @@
 package be.plutus.api.response;
 
-import be.plutus.api.response.meta.DefaultMeta;
+import be.plutus.api.response.meta.Meta;
 
 import java.util.Arrays;
 import java.util.Collection;
 
-public class Response<M extends DefaultMeta, O extends Object>{
+public class Response<M extends Meta, O extends Object>{
 
     private M meta;
     private Collection<String> errors;
