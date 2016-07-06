@@ -19,6 +19,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.PostConstruct;
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.stream.Collectors;
 
@@ -50,7 +51,7 @@ public class AuthEndpoint{
     public ResponseEntity<Response<Meta, TokenDTO>> post(
             @Valid @RequestBody AuthenticationDTO dto,
             BindingResult bindingResult,
-            @RequestHeader( value = "User-Agent", required = false ) String userAgent ){
+            HttpServletRequest request ){
         Response<Meta, TokenDTO> response = new Response<>();
 
         //TODO kan dit afgezonderd worden in hogere klasse om niet voor elk endpoint herhaald te moeten worden?
@@ -84,7 +85,7 @@ public class AuthEndpoint{
             return new ResponseEntity<>( response, HttpStatus.FORBIDDEN );
         }
 
-        Token token = tokenService.createToken( account, userAgent );
+        Token token = tokenService.createToken( account, dto.getApplication(), dto.getDevice(), request.getRemoteAddr());
 
         TokenDTO tokenDTO = new TokenDTO();
         tokenDTO.setToken( token.getToken() );
