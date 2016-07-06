@@ -41,7 +41,7 @@ public class AccountEndpoint{
 
         AccountDTO accountDTO = new AccountDTO();
         accountDTO.setEmail( account.getEmail() );
-        accountDTO.setUsers( account.getUsers().stream().map( user -> {
+        /*accountDTO.setUsers( account.getUsers().stream().map( user -> {
             UserDTO userDTO = new UserDTO();
             userDTO.setIndex( account.getUsers().indexOf( user ) );
             userDTO.setFirstName( user.getFirstName() );
@@ -49,7 +49,7 @@ public class AccountEndpoint{
             userDTO.setInstitution( user.getInstitution() );
             userDTO.setUsername( user.getUsername() );
             return userDTO;
-        } ).collect( Collectors.toList() ) );
+        } ).collect( Collectors.toList() ) );*/
 
         response.setMeta( meta );
         response.setData( accountDTO );

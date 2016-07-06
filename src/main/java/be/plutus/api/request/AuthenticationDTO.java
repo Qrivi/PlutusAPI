@@ -12,6 +12,12 @@ public class AuthenticationDTO{
     @NotBlank( message = "{NotBlank.AuthenticationDTO.password}" )
     private String password;
 
+    @NotBlank( message = "{NotBlank.AuthenticationDTO.application}" )
+    private String application;
+
+    @NotBlank( message = "{NotBlank.AuthenticationDTO.device}" )
+    private String device;
+
     public AuthenticationDTO(){
     }
 
@@ -19,15 +25,15 @@ public class AuthenticationDTO{
         return email;
     }
 
-    public void setEmail( String email ){
-        this.email = email;
-    }
-
     public String getPassword(){
         return password;
     }
 
-    public void setPassword( String password ){
-        this.password = password;
+    public String getApplication(){
+        return application;
+    }
+
+    public String getDevice(){
+        return device;
     }
 }
