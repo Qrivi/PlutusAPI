@@ -1,21 +1,18 @@
 package be.plutus.api.security;
 
 import be.plutus.api.response.Response;
-import be.plutus.api.response.meta.DefaultMeta;
+import be.plutus.api.response.meta.Meta;
+import be.plutus.api.security.exception.AuthenticationException;
 import be.plutus.api.util.MessageService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.stereotype.Component;
-
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 @Component
-public class UnauthorizedEntryPoint implements AuthenticationEntryPoint{
+public class AuthenticationExceptionHandler implements ExceptionHandler<AuthenticationException>{
 
     @Autowired
     private ObjectMapper objectMapper;
@@ -24,11 +21,11 @@ public class UnauthorizedEntryPoint implements AuthenticationEntryPoint{
     private MessageService messageService;
 
     @Override
-    public void commence( HttpServletRequest req, HttpServletResponse res, AuthenticationException authException ) throws IOException, ServletException{
-        Response<DefaultMeta, Object> response = new Response<>();
+    public void handle( HttpServletRequest req, HttpServletResponse res, AuthenticationException e ) throws IOException{
+        Response<Meta, Object> response = new Response<>();
 
-        response.setMeta( DefaultMeta.unauthorized() );
-        response.setErrors( messageService.get( authException.getMessage() ) );
+        response.setMeta( Meta.unauthorized() );
+        response.setErrors( messageService.get( e.getClass().getName() ) );
 
         res.setContentType( "application/json" );
         res.setStatus( HttpServletResponse.SC_UNAUTHORIZED );

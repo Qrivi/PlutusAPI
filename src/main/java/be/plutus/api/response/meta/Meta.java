@@ -7,11 +7,28 @@ import java.util.Date;
 public class Meta{
 
     private Date requestTimestamp;
+    private int responseStatusCode;
+
+    public Date getRequestTimestamp(){
+        return requestTimestamp;
+    }
+
+    public void setRequestTimestamp( Date requestTimestamp ){
+        this.requestTimestamp = requestTimestamp;
+    }
 
     @JsonFormat( pattern = "yyyy-MM-dd'T'HH:mm:ssZ" )
-    private Date requestTimestampISO8601;
+    public Date getRequestTimestampISO8601(){
+        return requestTimestamp;
+    }
 
-    private int responseStatusCode;
+    public int getResponseStatusCode(){
+        return responseStatusCode;
+    }
+
+    public void setResponseStatusCode( int responseStatusCode ){
+        this.responseStatusCode = responseStatusCode;
+    }
 
     public static Meta success(){
         Meta meta = new Meta();
@@ -53,26 +70,5 @@ public class Meta{
         meta.setResponseStatusCode( 404 );
         meta.setRequestTimestamp( new Date() );
         return meta;
-    }
-
-    public Date getRequestTimestamp(){
-        return requestTimestamp;
-    }
-
-    public void setRequestTimestamp( Date requestTimestamp ){
-        this.requestTimestamp = requestTimestamp;
-        this.requestTimestampISO8601 = requestTimestamp;
-    }
-
-    public Date getRequestTimestampISO8601(){
-        return requestTimestampISO8601;
-    }
-
-    public int getResponseStatusCode(){
-        return responseStatusCode;
-    }
-
-    public void setResponseStatusCode( int responseStatusCode ){
-        this.responseStatusCode = responseStatusCode;
     }
 }

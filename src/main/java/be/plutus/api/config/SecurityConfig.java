@@ -1,5 +1,6 @@
 package be.plutus.api.config;
 
+import be.plutus.api.security.AuthenticationExceptionHandler;
 import be.plutus.api.security.TokenAuthenticationFilter;
 import be.plutus.core.service.TokenService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +22,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
     private TokenService tokenService;
 
     @Autowired
-    private AuthenticationEntryPoint entryPoint;
+    private AuthenticationExceptionHandler exceptionHandler;
 
     @Override
     public void configure( WebSecurity web ) throws Exception {
@@ -36,12 +37,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
             .authorizeRequests()
                 .anyRequest().fullyAuthenticated()
         .and()
-            .addFilterBefore( new TokenAuthenticationFilter( tokenService, entryPoint ), BasicAuthenticationFilter.class )
+            .addFilterBefore( new TokenAuthenticationFilter( tokenService, exceptionHandler ), BasicAuthenticationFilter.class )
             .sessionManagement()
             .sessionCreationPolicy( SessionCreationPolicy.STATELESS )
-        .and()
-            .exceptionHandling()
-            .authenticationEntryPoint( entryPoint )
         .and()
             .httpBasic().disable()
             .csrf().disable()

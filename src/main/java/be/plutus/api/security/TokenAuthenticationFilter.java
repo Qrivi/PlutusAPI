@@ -5,14 +5,9 @@ import be.plutus.core.model.account.Account;
 import be.plutus.core.model.account.AccountStatus;
 import be.plutus.core.model.token.Token;
 import be.plutus.core.service.TokenService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.web.AuthenticationEntryPoint;
-import org.springframework.stereotype.Component;
 import org.springframework.web.filter.GenericFilterBean;
-import org.springframework.web.filter.OncePerRequestFilter;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -30,11 +25,11 @@ public class TokenAuthenticationFilter extends GenericFilterBean{
     private static String HEADER_SECURITY_TOKEN = "X-Auth-Token";
 
     private TokenService tokenService;
-    private AuthenticationEntryPoint entryPoint;
+    private AuthenticationExceptionHandler authenticationExceptionHandler;
 
-    public TokenAuthenticationFilter(TokenService tokenService, AuthenticationEntryPoint entryPoint){
+    public TokenAuthenticationFilter( TokenService tokenService, AuthenticationExceptionHandler authenticationExceptionHandler ){
         this.tokenService = tokenService;
-        this.entryPoint = entryPoint;
+        this.authenticationExceptionHandler = authenticationExceptionHandler;
     }
 
     @Override
@@ -50,13 +45,13 @@ public class TokenAuthenticationFilter extends GenericFilterBean{
                 Token token = null;
 
                 if( tokenHeader == null && tokenParameter == null )
-                    throw new TokenNotFoundException( "TokenNotFoundException" );
+                    throw new TokenNotFoundException();
 
                 if( tokenHeader != null )
-                    token = getToken( tokenHeader );
+                    token = tokenService.getToken( tokenHeader );;
 
                 if( tokenParameter != null )
-                    token = getToken( tokenParameter );
+                    token = tokenService.getToken( tokenParameter );;
 
                 if( isValid( token ) ){
                     tokenService.extendToken( token );
@@ -80,29 +75,25 @@ public class TokenAuthenticationFilter extends GenericFilterBean{
 
             chain.doFilter( request, response );
         }catch( AuthenticationException e ){
-            entryPoint.commence( request, response, e );
+            authenticationExceptionHandler.handle( request, response, e );
         }
-    }
-
-    private Token getToken( String tokenString ){
-        return tokenService.getToken( tokenString );
     }
 
     private boolean isValid( Token token ){
         if( token == null )
-            throw new TokenInvalidException( "TokenInvalidException" );
+            throw new TokenInvalidException();
         if( !token.isActive() )
-            throw new TokenNotActiveException( "TokenNotActiveException" );
+            throw new TokenNotActiveException();
         if( token.getExpiryDate().getTime() < new Date().getTime() )
-            throw new TokenExpiredException( "TokenExpiredException" );
+            throw new TokenExpiredException();
         return true;
     }
 
     private boolean isValid( Account account ){
         if( account == null )
-            throw new AccountNotFoundException( "AccountNotFoundException" );
+            throw new AccountNotFoundException();
         if( account.getStatus() != AccountStatus.ACTIVE )
-            throw new AccountNotActiveException( "AccountNotActiveException" );
+            throw new AccountNotActiveException();
         return true;
     }
 }
