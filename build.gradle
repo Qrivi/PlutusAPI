@@ -18,7 +18,6 @@ repositories {
 ext {
     hibernateValidationVersion = "5.2.4.Final"
     springDataVersion = "1.9.2.RELEASE"
-    mysqlVersion = "5.1.38"
 }
 
 apply plugin: "java"
@@ -35,7 +34,6 @@ dependencies {
     compile "org.springframework.boot:spring-boot-starter-security"
     compile "org.springframework.data:spring-data-jpa:$springDataVersion"
     compile "org.hibernate:hibernate-validator:$hibernateValidationVersion"
-    compile "mysql:mysql-connector-java:$mysqlVersion"
 
     testCompile "junit:junit:4.11"
 }

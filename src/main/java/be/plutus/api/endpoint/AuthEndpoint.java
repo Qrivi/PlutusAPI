@@ -81,6 +81,9 @@ public class AuthEndpoint{
 
         TokenDTO tokenDTO = new TokenDTO();
         tokenDTO.setToken( token.getToken() );
+        tokenDTO.setApplication( token.getApplicationName() );
+        tokenDTO.setDevice( token.getDeviceName() );
+        tokenDTO.setExpires( token.getExpiryDate() );
 
         response.setMeta( Meta.success() );
         response.setData( tokenDTO );
