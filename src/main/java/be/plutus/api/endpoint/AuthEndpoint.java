@@ -39,14 +39,6 @@ public class AuthEndpoint{
     @Autowired
     MessageService messageService;
 
-    @PostConstruct
-    public void addAccountForTesting(){
-        Account account = accountService.getAccount( "davidopdebeeck@hotmail.com" );
-
-        if( account == null )
-            accountService.createAccount( "davidopdebeeck@hotmail.com", "this-is-a-password" );
-    }
-
     @RequestMapping( method = RequestMethod.POST )
     public ResponseEntity<Response<Meta, TokenDTO>> post(
             @Valid @RequestBody AuthenticationDTO dto,
