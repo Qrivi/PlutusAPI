@@ -11,6 +11,28 @@ public class Response<M extends Meta, O extends Object>{
     private Collection<String> errors;
     private O data;
 
+    public Response(){
+    }
+
+    public Response( M meta ){
+        this.meta = meta;
+    }
+
+    public Response( M meta, O data ){
+        this.meta = meta;
+        this.data = data;
+    }
+
+    public Response( M meta, Collection<String> errors ){
+        this.meta = meta;
+        this.errors = errors;
+    }
+
+    public Response( M meta, String... errors ){
+        this.meta = meta;
+        this.errors = Arrays.asList( errors );
+    }
+
     public M getMeta(){
         return meta;
     }

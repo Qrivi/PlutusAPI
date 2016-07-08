@@ -11,17 +11,14 @@ import be.plutus.core.model.token.Token;
 import be.plutus.core.service.AccountService;
 import be.plutus.core.service.TokenService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
-import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping(
@@ -31,33 +28,25 @@ import java.util.stream.Collectors;
 public class AuthEndpoint{
 
     @Autowired
-    AccountService accountService;
+    TokenService tokenService;
 
     @Autowired
-    TokenService tokenService;
+    AccountService accountService;
 
     @Autowired
     MessageService messageService;
 
-    @RequestMapping( method = RequestMethod.POST )
-    public ResponseEntity<Response<Meta, TokenDTO>> post(
-            @Valid @RequestBody AuthenticationDTO dto,
-            BindingResult bindingResult,
-            HttpServletRequest request ){
-        Response<Meta, TokenDTO> response = new Response<>();
+    @Autowired
+    EndpointUtils endpointUtils;
 
-        //TODO kan dit afgezonderd worden in hogere klasse om niet voor elk endpoint herhaald te moeten worden?
-        if( bindingResult.hasErrors() ){
-            response.setMeta( Meta.badRequest() );
-            response.setErrors( bindingResult.getAllErrors()
-                    .stream()
-                    .map( DefaultMessageSourceResolvable::getDefaultMessage )
-                    .collect( Collectors.toList() )
-            );
-            return new ResponseEntity<>( response, HttpStatus.BAD_REQUEST );
-        }
+    @RequestMapping( method = RequestMethod.POST )
+    public ResponseEntity<Response> post( @Valid @RequestBody AuthenticationDTO dto, BindingResult result, HttpServletRequest request ){
+
+        if( result.hasErrors() )
+            return endpointUtils.createErrorResponse( result );
 
         Account account = accountService.getAccount( dto.getEmail() );
+        Response<Meta, Object> response = new Response<>();
 
         if( account == null ){
             response.setMeta( Meta.badRequest() );
@@ -89,5 +78,6 @@ public class AuthEndpoint{
         response.setData( tokenDTO );
 
         return new ResponseEntity<>( response, HttpStatus.OK );
+
     }
 }

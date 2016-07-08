@@ -1,17 +1,15 @@
 package be.plutus.api.response;
 
+import be.plutus.core.model.currency.Currency;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
-import java.util.Currency;
 import java.util.Date;
-import java.util.List;
 
 public class AccountDTO{
 
     private String email;
     private Currency currency;
     private Date created;
-    private List<SessionDTO> sessions;
 
     public AccountDTO(){
     }
@@ -43,13 +41,5 @@ public class AccountDTO{
 
     public void setCreated( Date created ){
         this.created = created;
-    }
-
-    public List<SessionDTO> getSessions(){
-        return sessions;
-    }
-
-    public void setSessions( List<SessionDTO> sessions ){
-        this.sessions = sessions;
     }
 }

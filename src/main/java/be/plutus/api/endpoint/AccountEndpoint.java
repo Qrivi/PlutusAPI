@@ -1,9 +1,8 @@
 package be.plutus.api.endpoint;
 
+import be.plutus.api.request.AccountCreateDTO;
 import be.plutus.api.response.AccountDTO;
 import be.plutus.api.response.Response;
-import be.plutus.api.response.UserDTO;
-import be.plutus.api.response.meta.AccountMeta;
 import be.plutus.api.response.meta.Meta;
 import be.plutus.core.model.account.Account;
 import be.plutus.core.service.AccountService;
@@ -12,12 +11,13 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Date;
-import java.util.stream.Collectors;
+import javax.validation.Valid;
 
 @RestController
 @RequestMapping(
@@ -29,32 +29,33 @@ public class AccountEndpoint{
     @Autowired
     AccountService accountService;
 
+    @Autowired
+    EndpointUtils endpointUtils;
+
     @RequestMapping( method = RequestMethod.GET )
     public ResponseEntity<Response<Meta, AccountDTO>> get( Authentication authentication ){
+
         Account account = accountService.getAccount( (String)authentication.getPrincipal() );
 
-        Response<Meta, AccountDTO> response = new Response<>();
+        AccountDTO dto = new AccountDTO();
+        dto.setEmail( account.getEmail() );
+        dto.setCurrency( account.getDefaultCurrency() );
+        dto.setCreated( account.getCreationDate() );
 
-        AccountMeta meta = new AccountMeta();
-        meta.setResponseStatusCode( 200 );
-        meta.setRequestTimestamp( new Date() );
+        return new ResponseEntity<>( new Response<>( Meta.success(), dto ), HttpStatus.OK );
 
-        AccountDTO accountDTO = new AccountDTO();
-        accountDTO.setEmail( account.getEmail() );
-        /*accountDTO.setUsers( account.getUsers().stream().map( user -> {
-            UserDTO userDTO = new UserDTO();
-            userDTO.setIndex( account.getUsers().indexOf( user ) );
-            userDTO.setFirstName( user.getFirstName() );
-            userDTO.setLastName( user.getLastName() );
-            userDTO.setInstitution( user.getInstitution() );
-            userDTO.setUsername( user.getUsername() );
-            return userDTO;
-        } ).collect( Collectors.toList() ) );*/
+    }
 
-        response.setMeta( meta );
-        response.setData( accountDTO );
+    @RequestMapping( method = RequestMethod.POST )
+    public ResponseEntity<Response> post( @Valid @RequestBody AccountCreateDTO dto , BindingResult result ){
 
-        return new ResponseEntity<>( response, HttpStatus.OK );
+        if( result.hasErrors() )
+            return endpointUtils.createErrorResponse( result );
+
+        accountService.createAccount( dto.getEmail(), dto.getPassword() );
+
+        return new ResponseEntity<>( new Response<>( Meta.success() ), HttpStatus.OK );
+
     }
 
 }
