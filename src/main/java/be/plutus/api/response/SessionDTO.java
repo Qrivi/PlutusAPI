@@ -6,11 +6,20 @@ import java.util.Date;
 
 public class SessionDTO{
 
+    private int index;
     private String application;
     private String device;
     private Date expires;
 
     public SessionDTO(){
+    }
+
+    public int getIndex(){
+        return index;
+    }
+
+    public void setIndex( int index ){
+        this.index = index;
     }
 
     public String getApplication(){
