@@ -64,7 +64,7 @@ public class TokenAuthenticationFilter extends GenericFilterBean{
                                 .getContext()
                                 .setAuthentication(
                                         new UsernamePasswordAuthenticationToken(
-                                                account.getEmail(),
+                                                account.getId(),
                                                 account.getPassword(),
                                                 Collections.singletonList( ( () -> "ROLE_BASIC" ) )
                                         )
