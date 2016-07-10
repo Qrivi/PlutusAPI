@@ -9,6 +9,8 @@ public class SessionDTO{
     private int index;
     private String application;
     private String device;
+    private String ip;
+    private Date created;
     private Date expires;
 
     public SessionDTO(){
@@ -38,6 +40,27 @@ public class SessionDTO{
         this.device = device;
     }
 
+    public String getIp(){
+        return ip;
+    }
+
+    public void setIp( String ip ){
+        this.ip = ip;
+    }
+
+    public Date getCreated(){
+        return created;
+    }
+
+    @JsonFormat( pattern = "yyyy-MM-dd'T'HH:mm:ssZ" )
+    public Date getCreatedISO8601(){
+        return created;
+    }
+
+    public void setCreated( Date created ){
+        this.created = created;
+    }
+
     public Date getExpires(){
         return expires;
     }
@@ -50,4 +73,5 @@ public class SessionDTO{
     public void setExpires( Date expires ){
         this.expires = expires;
     }
+
 }

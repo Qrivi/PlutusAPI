@@ -1,5 +1,6 @@
 package be.plutus.api.endpoint;
 
+import be.plutus.api.response.RequestDTO;
 import be.plutus.api.response.Response;
 import be.plutus.api.response.SessionDTO;
 import be.plutus.api.response.meta.Meta;
@@ -56,9 +57,20 @@ public class SessionsEndpoint{
         if ( id < 0 || id > tokens.size() - 1 )
             return new ResponseEntity<>( new Response<>( Meta.notFound() ), HttpStatus.NOT_FOUND );
 
-        tokenService.removeToken( tokens.get( id ).getId() );
+        tokenService.deactivateToken( tokens.get( id ).getId() );
 
         return new ResponseEntity<>( new Response<>( Meta.success() ), HttpStatus.OK );
+    }
+
+    @RequestMapping( value = "/{id}/requests",method = RequestMethod.GET )
+    public ResponseEntity<Response> getRequests( @PathVariable(value = "id") Integer id, Authentication authentication ){
+
+        List<Token> tokens = tokenService.getTokensFromAccount((Integer)authentication.getPrincipal());
+
+        if ( id < 0 || id > tokens.size() - 1 )
+            return new ResponseEntity<>( new Response<>( Meta.notFound() ), HttpStatus.NOT_FOUND );
+
+        return new ResponseEntity<Response>( new Response<>( Meta.success(), getRequestsFromToken(tokens.get( id ).getId()) ), HttpStatus.OK );
     }
 
     private List<SessionDTO> getSessionsFromAccount( Authentication authentication ){
@@ -69,7 +81,21 @@ public class SessionsEndpoint{
                     dto.setIndex( index[0]++ );
                     dto.setApplication( token.getApplicationName() );
                     dto.setDevice( token.getDeviceName() );
+                    dto.setIp( token.getRequestIp() );
+                    dto.setCreated( token.getCreationDate() );
                     dto.setExpires( token.getExpiryDate() );
+                    return dto;
+                } ).collect( Collectors.toList() );
+    }
+
+    private List<RequestDTO> getRequestsFromToken( int id ){
+        return tokenService.getRequestsFromToken( id )
+                .stream().map( request -> {
+                    RequestDTO dto = new RequestDTO();
+                    dto.setMethod( request.getMethod() );
+                    dto.setEndpoint(request.getEndpoint() );
+                    dto.setIp( request.getIp() );
+                    dto.setTimestamp( request.getTimestamp() );
                     return dto;
                 } ).collect( Collectors.toList() );
     }
