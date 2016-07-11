@@ -4,7 +4,6 @@ import be.plutus.api.request.PreferenceCreateDTO;
 import be.plutus.api.request.PreferenceValueCreateDTO;
 import be.plutus.api.response.Response;
 import be.plutus.api.response.meta.Meta;
-import be.plutus.core.model.account.Account;
 import be.plutus.core.model.preferences.Preferences;
 import be.plutus.core.service.PreferencesService;
 import org.springframework.beans.factory.annotation.Autowired;
