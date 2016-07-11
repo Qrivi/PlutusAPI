@@ -10,18 +10,16 @@ import org.springframework.validation.BindingResult;
 
 import java.util.stream.Collectors;
 
-@Component
 public class EndpointUtils{
 
-    public ResponseEntity<Response> createErrorResponse( BindingResult result ){
-        Response<Meta, Object> response = new Response<>();
-        response.setMeta( Meta.badRequest() );
-        response.setErrors( result.getAllErrors()
+    public static ResponseEntity<Response> createErrorResponse( BindingResult result ){
+        Response.Builder response = new Response.Builder();
+        response.errors( result.getAllErrors()
                 .stream()
                 .map( DefaultMessageSourceResolvable::getDefaultMessage )
                 .collect( Collectors.toList() )
         );
-        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(response.badRequest().build(), HttpStatus.BAD_REQUEST);
     }
 
 }

@@ -31,9 +31,6 @@ public class AccountEndpoint{
     @Autowired
     AccountService accountService;
 
-    @Autowired
-    EndpointUtils endpointUtils;
-
     @RequestMapping( method = RequestMethod.GET )
     public ResponseEntity<Response> get( Authentication authentication ){
 
@@ -44,39 +41,39 @@ public class AccountEndpoint{
         dto.setCurrency( account.getDefaultCurrency() );
         dto.setCreated( account.getCreationDate() );
 
-        return new ResponseEntity<>( new Response<>( Meta.success(), dto ), HttpStatus.OK );
+        return new ResponseEntity<>( new Response.Builder().data( dto ).success().build(), HttpStatus.OK );
     }
 
     @RequestMapping( method = RequestMethod.POST )
     public ResponseEntity<Response> post( @Valid @RequestBody AccountCreateDTO dto, BindingResult result ){
 
         if( result.hasErrors() )
-            return endpointUtils.createErrorResponse( result );
+            return EndpointUtils.createErrorResponse( result );
 
         accountService.createAccount( dto.getEmail(), dto.getPassword(), dto.getDefaultCurrency() );
 
-        return new ResponseEntity<>( new Response<>( Meta.success() ), HttpStatus.CREATED );
+        return new ResponseEntity<>( new Response.Builder().success().build(), HttpStatus.CREATED );
     }
 
     @RequestMapping( method = RequestMethod.PUT )
     public ResponseEntity<Response> put( @Valid @RequestBody AccountUpdateDTO dto, BindingResult result, Authentication authentication ){
 
         if( result.hasErrors() )
-            return endpointUtils.createErrorResponse( result );
+            return EndpointUtils.createErrorResponse( result );
 
         accountService.updateAccount( (Integer)authentication.getPrincipal(), dto.getNewEmail(), dto.getNewPassword(), dto.getNewDefaultCurrency() );
 
-        return new ResponseEntity<>( new Response<>( Meta.success() ), HttpStatus.OK );
+        return new ResponseEntity<>( new Response.Builder().success().build(), HttpStatus.OK );
     }
 
     @RequestMapping( method = RequestMethod.DELETE )
     public ResponseEntity<Response> delete( @Valid @RequestBody AccountRemoveDTO dto, BindingResult result, Authentication authentication ){
 
         if( result.hasErrors() )
-            return endpointUtils.createErrorResponse( result );
+            return EndpointUtils.createErrorResponse( result );
 
         accountService.removeAccount( (Integer)authentication.getPrincipal() );
 
-        return new ResponseEntity<>( new Response<>( Meta.success() ), HttpStatus.OK );
+        return new ResponseEntity<>( new Response.Builder().success().build(), HttpStatus.OK );
     }
 }

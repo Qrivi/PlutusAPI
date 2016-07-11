@@ -30,7 +30,7 @@ public class PreferencesEndpoint{
     public ResponseEntity<Response> get( Authentication authentication ){
 
         Preferences preferences = preferencesService.getPreferenceFromAccount( (Integer)authentication.getPrincipal() );
-        return new ResponseEntity<>( new Response<>( Meta.success(), preferences.toMap() ), HttpStatus.OK );
+        return new ResponseEntity<>( new Response.Builder().data( preferences.toMap() ).success().build(), HttpStatus.OK );
     }
 
     @RequestMapping( method = RequestMethod.POST )
@@ -39,7 +39,7 @@ public class PreferencesEndpoint{
         Preferences preferences = preferencesService.getPreferenceFromAccount( (Integer)authentication.getPrincipal() );
 
         preferencesService.addPreference( preferences.getId(), dto.getKey(), dto.getValue() );
-        return new ResponseEntity<>( new Response<>( Meta.success() ), HttpStatus.OK );
+        return new ResponseEntity<>( new Response.Builder().success().build(), HttpStatus.OK );
     }
 
     @RequestMapping( value = "/{key}", method = RequestMethod.GET )
@@ -50,7 +50,7 @@ public class PreferencesEndpoint{
         Map<String, String> preference = new HashMap<>();
         preference.put( key, preferences.get(key) );
 
-        return new ResponseEntity<>( new Response<>( Meta.success(), preference ), HttpStatus.OK );
+        return new ResponseEntity<>( new Response.Builder().data( preference ).success().build(), HttpStatus.OK );
     }
 
     @RequestMapping( value = "/{key}", method = RequestMethod.PUT )
@@ -59,6 +59,6 @@ public class PreferencesEndpoint{
         Preferences preferences = preferencesService.getPreferenceFromAccount( (Integer)authentication.getPrincipal() );
 
         preferencesService.addPreference( preferences.getId(), key, dto.getValue() );
-        return new ResponseEntity<>( new Response<>( Meta.success() ), HttpStatus.OK );
+        return new ResponseEntity<>( new Response.Builder().success().build(), HttpStatus.OK );
     }
 }

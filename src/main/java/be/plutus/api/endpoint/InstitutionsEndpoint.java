@@ -2,8 +2,6 @@ package be.plutus.api.endpoint;
 
 import be.plutus.api.response.InstitutionDTO;
 import be.plutus.api.response.Response;
-import be.plutus.api.response.meta.Meta;
-import be.plutus.core.model.location.Institution;
 import be.plutus.core.service.LocationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -37,7 +35,7 @@ public class InstitutionsEndpoint{
                     dto.setHint( institution.getHint() );
                     return dto;
                 }).collect( Collectors.toList() );
-        return new ResponseEntity<Response>( new Response<>( Meta.success(), institutions ), HttpStatus.OK );
+        return new ResponseEntity<>( new Response.Builder().data( institutions ).success().build(), HttpStatus.OK );
     }
 
 }

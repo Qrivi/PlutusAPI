@@ -35,7 +35,7 @@ public class SessionsEndpoint{
 
     @RequestMapping( method = RequestMethod.GET )
     public ResponseEntity<Response> get( Authentication authentication ){
-        return new ResponseEntity<Response>( new Response<>( Meta.success(), getSessionsFromAccount(authentication) ), HttpStatus.OK );
+        return new ResponseEntity<>( new Response.Builder().data( getSessionsFromAccount(authentication) ).success().build(), HttpStatus.OK );
     }
 
     @RequestMapping( value = "/{id}",method = RequestMethod.GET )
@@ -44,9 +44,9 @@ public class SessionsEndpoint{
         List<SessionDTO> sessions = getSessionsFromAccount(authentication);
 
         if ( id < 0 || id > sessions.size() - 1 )
-            return new ResponseEntity<>( new Response<>( Meta.notFound() ), HttpStatus.NOT_FOUND );
+            return new ResponseEntity<>( new Response.Builder().notFound().build(), HttpStatus.NOT_FOUND );
 
-        return new ResponseEntity<>( new Response<>( Meta.success(), sessions.get( id ) ), HttpStatus.OK );
+        return new ResponseEntity<>( new Response.Builder().data( sessions.get( id ) ).success().build(), HttpStatus.OK );
     }
 
     @RequestMapping( value = "/{id}",method = RequestMethod.DELETE )
@@ -55,11 +55,11 @@ public class SessionsEndpoint{
         List<Token> tokens = tokenService.getTokensFromAccount((Integer)authentication.getPrincipal());
 
         if ( id < 0 || id > tokens.size() - 1 )
-            return new ResponseEntity<>( new Response<>( Meta.notFound() ), HttpStatus.NOT_FOUND );
+            return new ResponseEntity<>( new Response.Builder().notFound().build(), HttpStatus.NOT_FOUND );
 
         tokenService.deactivateToken( tokens.get( id ).getId() );
 
-        return new ResponseEntity<>( new Response<>( Meta.success() ), HttpStatus.OK );
+        return new ResponseEntity<>( new Response.Builder().success().build(), HttpStatus.OK );
     }
 
     @RequestMapping( value = "/{id}/requests",method = RequestMethod.GET )
@@ -68,9 +68,9 @@ public class SessionsEndpoint{
         List<Token> tokens = tokenService.getTokensFromAccount((Integer)authentication.getPrincipal());
 
         if ( id < 0 || id > tokens.size() - 1 )
-            return new ResponseEntity<>( new Response<>( Meta.notFound() ), HttpStatus.NOT_FOUND );
+            return new ResponseEntity<>( new Response.Builder().notFound().build(), HttpStatus.NOT_FOUND );
 
-        return new ResponseEntity<Response>( new Response<>( Meta.success(), getRequestsFromToken(tokens.get( id ).getId()) ), HttpStatus.OK );
+        return new ResponseEntity<>( new Response.Builder().data( getRequestsFromToken(tokens.get( id ).getId()) ).success().build(), HttpStatus.OK );
     }
 
     private List<SessionDTO> getSessionsFromAccount( Authentication authentication ){

@@ -2,27 +2,44 @@ package be.plutus.api.response.meta;
 
 import be.plutus.core.model.currency.Currency;
 
+import java.util.Date;
+
 public class AccountMeta extends Meta{
 
-    private String account;
-    private Currency currency;
+    protected String account;
+    protected Currency currency;
 
-    public AccountMeta(){
+    public AccountMeta( Date requestTimestamp, int responseStatusCode, String account, Currency currency ){
+        super( requestTimestamp, responseStatusCode );
+        this.account = account;
+        this.currency = currency;
     }
 
     public String getAccount(){
         return account;
     }
 
-    public void setAccount( String account ){
-        this.account = account; // Account.email
-    }
-
     public Currency getCurrency(){
         return currency;
     }
 
-    public void setCurrency( Currency currency ){
-        this.currency = currency;
+    public static class Builder<B extends AccountMeta.Builder<B>> extends Meta.Builder<B>{
+
+        protected String account;
+        protected Currency currency;
+
+        public B account( String account ){
+            this.account = account;
+            return (B)this;
+        }
+
+        public B currency( Currency currency ){
+            this.currency = currency;
+            return (B)this;
+        }
+
+        public Meta build(){
+            return new AccountMeta(timestamp, statusCode, account, currency);
+        }
     }
 }

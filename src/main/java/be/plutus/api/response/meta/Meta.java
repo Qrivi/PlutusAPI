@@ -6,8 +6,13 @@ import java.util.Date;
 
 public class Meta{
 
-    private Date requestTimestamp;
-    private int responseStatusCode;
+    protected Date requestTimestamp;
+    protected int responseStatusCode;
+
+    public Meta( Date requestTimestamp, int responseStatusCode ){
+        this.requestTimestamp = requestTimestamp;
+        this.responseStatusCode = responseStatusCode;
+    }
 
     public Date getRequestTimestamp(){
         return requestTimestamp;
@@ -18,57 +23,53 @@ public class Meta{
         return requestTimestamp;
     }
 
-    public void setRequestTimestamp( Date requestTimestamp ){
-        this.requestTimestamp = requestTimestamp;
-    }
-
     public int getResponseStatusCode(){
         return responseStatusCode;
     }
 
-    public void setResponseStatusCode( int responseStatusCode ){
-        this.responseStatusCode = responseStatusCode;
-    }
+    public static class Builder<B extends Meta.Builder<B>>{
 
-    public static Meta success(){
-        Meta meta = new Meta();
-        meta.setResponseStatusCode( 200 );
-        meta.setRequestTimestamp( new Date() );
-        return meta;
-    }
+        protected Date timestamp;
+        protected int statusCode;
 
-    public static Meta badRequest(){
-        Meta meta = new Meta();
-        meta.setResponseStatusCode( 400 );
-        meta.setRequestTimestamp( new Date() );
-        return meta;
-    }
+        public B success(){
+            this.timestamp = new Date();
+            this.statusCode = 200;
+            return (B)this;
+        }
 
-    public static Meta unauthorized(){
-        Meta meta = new Meta();
-        meta.setResponseStatusCode( 401 );
-        meta.setRequestTimestamp( new Date() );
-        return meta;
-    }
+        public B badRequest(){
+            this.timestamp = new Date();
+            this.statusCode = 400;
+            return (B)this;
+        }
 
-    public static Meta forbidden(){
-        Meta meta = new Meta();
-        meta.setResponseStatusCode( 403 );
-        meta.setRequestTimestamp( new Date() );
-        return meta;
-    }
+        public B unauthorized(){
+            this.timestamp = new Date();
+            this.statusCode = 401;
+            return (B)this;
+        }
 
-    public static Meta serverError(){
-        Meta meta = new Meta();
-        meta.setResponseStatusCode( 500 );
-        meta.setRequestTimestamp( new Date() );
-        return meta;
-    }
+        public B forbidden(){
+            this.timestamp = new Date();
+            this.statusCode = 403;
+            return (B)this;
+        }
 
-    public static Meta notFound(){
-        Meta meta = new Meta();
-        meta.setResponseStatusCode( 404 );
-        meta.setRequestTimestamp( new Date() );
-        return meta;
+        public B serverError(){
+            this.timestamp = new Date();
+            this.statusCode = 500;
+            return (B)this;
+        }
+
+        public B notFound(){
+            this.timestamp = new Date();
+            this.statusCode = 404;
+            return (B)this;
+        }
+
+        public Meta build(){
+            return new Meta(timestamp, statusCode);
+        }
     }
 }

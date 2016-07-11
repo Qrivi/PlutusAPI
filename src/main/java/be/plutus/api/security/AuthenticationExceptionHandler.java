@@ -22,14 +22,14 @@ public class AuthenticationExceptionHandler implements ExceptionHandler<Authenti
 
     @Override
     public void handle( HttpServletRequest req, HttpServletResponse res, AuthenticationException e ) throws IOException{
-        Response<Meta, Object> response = new Response<>();
+        Response.Builder response = new Response.Builder();
 
-        response.setMeta( Meta.unauthorized() );
-        response.setErrors( messageService.get( e.getClass().getName() ) );
+        response.unauthorized();
+        response.errors( messageService.get( e.getClass().getName() ) );
 
         res.setContentType( "application/json" );
         res.setStatus( HttpServletResponse.SC_UNAUTHORIZED );
 
-        objectMapper.writeValue( res.getOutputStream(), response );
+        objectMapper.writeValue( res.getOutputStream(), response.build() );
     }
 }

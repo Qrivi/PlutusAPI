@@ -36,34 +36,28 @@ public class AuthEndpoint{
     @Autowired
     MessageService messageService;
 
-    @Autowired
-    EndpointUtils endpointUtils;
-
     @RequestMapping( method = RequestMethod.POST )
     public ResponseEntity<Response> post( @Valid @RequestBody AuthenticationDTO dto, BindingResult result, HttpServletRequest request ){
 
         if( result.hasErrors() )
-            return endpointUtils.createErrorResponse( result );
+            return EndpointUtils.createErrorResponse( result );
 
         Account account = accountService.getAccount( dto.getEmail() );
-        Response<Meta, Object> response = new Response<>();
+        Response.Builder response = new Response.Builder();
 
         if( account == null ){
-            response.setMeta( Meta.badRequest() );
-            response.setErrors( messageService.get( "NotValid.AuthEndpoint.email" ) );
-            return new ResponseEntity<>( response, HttpStatus.BAD_REQUEST );
+            response.errors( messageService.get( "NotValid.AuthEndpoint.email" ) );
+            return new ResponseEntity<>( response.badRequest().build(), HttpStatus.BAD_REQUEST );
         }
 
         if( !account.isPasswordValid( dto.getPassword() ) ){
-            response.setMeta( Meta.badRequest() );
-            response.setErrors( messageService.get( "NotValid.AuthEndpoint.password" ) );
-            return new ResponseEntity<>( response, HttpStatus.BAD_REQUEST );
+            response.errors( messageService.get( "NotValid.AuthEndpoint.password" ) );
+            return new ResponseEntity<>( response.badRequest().build(), HttpStatus.BAD_REQUEST );
         }
 
         if( account.getStatus() != AccountStatus.ACTIVE ){
-            response.setMeta( Meta.forbidden() );
-            response.setErrors( account.getStatus().getStatus() );
-            return new ResponseEntity<>( response, HttpStatus.FORBIDDEN );
+            response.errors( account.getStatus().getStatus() );
+            return new ResponseEntity<>( response.forbidden().build(), HttpStatus.FORBIDDEN );
         }
 
         Token token = tokenService.createToken( account, dto.getApplication(), dto.getDevice(), request.getRemoteAddr());
@@ -74,10 +68,6 @@ public class AuthEndpoint{
         tokenDTO.setDevice( token.getDeviceName() );
         tokenDTO.setExpires( token.getExpiryDate() );
 
-        response.setMeta( Meta.success() );
-        response.setData( tokenDTO );
-
-        return new ResponseEntity<>( response, HttpStatus.OK );
-
+        return new ResponseEntity<>( response.data( tokenDTO ).success().build(), HttpStatus.OK );
     }
 }
