@@ -1,7 +1,7 @@
 package be.plutus.api.config;
 
-import be.plutus.api.security.AuthenticationExceptionHandler;
-import be.plutus.api.security.TokenAuthenticationFilter;
+import be.plutus.api.security.filter.AuthenticationExceptionHandler;
+import be.plutus.api.security.filter.TokenAuthenticationFilter;
 import be.plutus.core.service.TokenService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
@@ -11,7 +11,6 @@ import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 
 @Configuration

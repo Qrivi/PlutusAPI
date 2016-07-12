@@ -3,7 +3,7 @@ package be.plutus.api.endpoint;
 import be.plutus.api.response.RequestDTO;
 import be.plutus.api.response.Response;
 import be.plutus.api.response.SessionDTO;
-import be.plutus.api.response.meta.Meta;
+import be.plutus.api.security.Auth;
 import be.plutus.core.model.token.Token;
 import be.plutus.core.service.AccountService;
 import be.plutus.core.service.TokenService;
@@ -11,7 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -34,48 +33,61 @@ public class SessionsEndpoint{
     AccountService accountService;
 
     @RequestMapping( method = RequestMethod.GET )
-    public ResponseEntity<Response> get( Authentication authentication ){
-        return new ResponseEntity<>( new Response.Builder().data( getSessionsFromAccount(authentication) ).success().build(), HttpStatus.OK );
+    public ResponseEntity<Response> get(){
+        return new ResponseEntity<>( new Response.Builder()
+                .data( getSessions() )
+                .success()
+                .build(), HttpStatus.OK );
     }
 
-    @RequestMapping( value = "/{id}",method = RequestMethod.GET )
-    public ResponseEntity<Response> getByIndex( @PathVariable(value = "id") Integer id, Authentication authentication ){
+    @RequestMapping( value = "/{id}", method = RequestMethod.GET )
+    public ResponseEntity<Response> getByIndex( @PathVariable( value = "id" ) Integer id ){
 
-        List<SessionDTO> sessions = getSessionsFromAccount(authentication);
+        List<SessionDTO> sessions = getSessions();
 
-        if ( id < 0 || id > sessions.size() - 1 )
+        if( id < 0 || id > sessions.size() - 1 )
             return new ResponseEntity<>( new Response.Builder().notFound().build(), HttpStatus.NOT_FOUND );
 
-        return new ResponseEntity<>( new Response.Builder().data( sessions.get( id ) ).success().build(), HttpStatus.OK );
+        return new ResponseEntity<>( new Response.Builder()
+                .data( sessions.get( id ) )
+                .success()
+                .build(), HttpStatus.OK );
     }
 
-    @RequestMapping( value = "/{id}",method = RequestMethod.DELETE )
-    public ResponseEntity<Response> delete( @PathVariable(value = "id") Integer id, Authentication authentication ){
+    @RequestMapping( value = "/{id}", method = RequestMethod.DELETE )
+    public ResponseEntity<Response> delete( @PathVariable( value = "id" ) Integer id ){
 
-        List<Token> tokens = tokenService.getTokensFromAccount((Integer)authentication.getPrincipal());
+        List<Token> tokens = tokenService.getTokensFromAccount( Auth.current().getId() );
 
-        if ( id < 0 || id > tokens.size() - 1 )
+        if( id < 0 || id > tokens.size() - 1 )
             return new ResponseEntity<>( new Response.Builder().notFound().build(), HttpStatus.NOT_FOUND );
 
         tokenService.deactivateToken( tokens.get( id ).getId() );
 
-        return new ResponseEntity<>( new Response.Builder().success().build(), HttpStatus.OK );
+        return new ResponseEntity<>( new Response.Builder()
+                .success()
+                .build(), HttpStatus.OK );
     }
 
-    @RequestMapping( value = "/{id}/requests",method = RequestMethod.GET )
-    public ResponseEntity<Response> getRequests( @PathVariable(value = "id") Integer id, Authentication authentication ){
+    @RequestMapping( value = "/{id}/requests", method = RequestMethod.GET )
+    public ResponseEntity<Response> getRequests( @PathVariable( value = "id" ) Integer id ){
 
-        List<Token> tokens = tokenService.getTokensFromAccount((Integer)authentication.getPrincipal());
+        List<Token> tokens = tokenService.getTokensFromAccount( Auth.current().getId() );
 
-        if ( id < 0 || id > tokens.size() - 1 )
+        if( id < 0 || id > tokens.size() - 1 )
             return new ResponseEntity<>( new Response.Builder().notFound().build(), HttpStatus.NOT_FOUND );
 
-        return new ResponseEntity<>( new Response.Builder().data( getRequestsFromToken(tokens.get( id ).getId()) ).success().build(), HttpStatus.OK );
+        List<RequestDTO> requests =  getRequestsFromToken( tokens.get( id ).getId() );
+
+        return new ResponseEntity<>( new Response.Builder()
+                .data( requests )
+                .success()
+                .build(), HttpStatus.OK );
     }
 
-    private List<SessionDTO> getSessionsFromAccount( Authentication authentication ){
+    private List<SessionDTO> getSessions(){
         final int[] index = {0};
-        return tokenService.getTokensFromAccount( (Integer)authentication.getPrincipal() )
+        return tokenService.getTokensFromAccount( Auth.current().getId() )
                 .stream().map( token -> {
                     SessionDTO dto = new SessionDTO();
                     dto.setIndex( index[0]++ );
@@ -93,7 +105,7 @@ public class SessionsEndpoint{
                 .stream().map( request -> {
                     RequestDTO dto = new RequestDTO();
                     dto.setMethod( request.getMethod() );
-                    dto.setEndpoint(request.getEndpoint() );
+                    dto.setEndpoint( request.getEndpoint() );
                     dto.setIp( request.getIp() );
                     dto.setTimestamp( request.getTimestamp() );
                     return dto;

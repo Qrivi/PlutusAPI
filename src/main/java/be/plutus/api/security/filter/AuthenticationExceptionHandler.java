@@ -1,18 +1,17 @@
-package be.plutus.api.security;
+package be.plutus.api.security.filter;
 
 import be.plutus.api.response.Response;
-import be.plutus.api.response.meta.Meta;
 import be.plutus.api.security.exception.AuthenticationException;
 import be.plutus.api.util.MessageService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import javax.servlet.http.HttpServletRequest;
+
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 @Component
-public class AuthenticationExceptionHandler implements ExceptionHandler<AuthenticationException>{
+public class AuthenticationExceptionHandler{
 
     @Autowired
     private ObjectMapper objectMapper;
@@ -20,8 +19,7 @@ public class AuthenticationExceptionHandler implements ExceptionHandler<Authenti
     @Autowired
     private MessageService messageService;
 
-    @Override
-    public void handle( HttpServletRequest req, HttpServletResponse res, AuthenticationException e ) throws IOException{
+    public void handle( HttpServletResponse res, AuthenticationException e ) throws IOException{
         Response.Builder response = new Response.Builder();
 
         response.unauthorized();

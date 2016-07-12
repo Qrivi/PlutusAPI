@@ -1,6 +1,6 @@
 package be.plutus.api.response;
 
-import be.plutus.api.response.meta.Meta;
+import be.plutus.api.security.Auth;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -22,6 +22,14 @@ public class Response{
         this.meta = meta;
     }
 
+    public Object getData(){
+        return data;
+    }
+
+    public void setData( Object data ){
+        this.data = data;
+    }
+
     public Collection<String> getErrors(){
         return errors;
     }
@@ -34,27 +42,14 @@ public class Response{
         this.errors = errors;
     }
 
-    public Object getData(){
-        return data;
-    }
-
-    public void setData( Object data ){
-        this.data = data;
-    }
-
     public static class Builder{
 
-        private Object data;
         private Meta.Builder meta;
+        private Object data;
         private Collection<String> errors;
 
         public Builder(){
-            meta = new Meta.Builder<>();
-        }
-
-        public Builder meta( Meta.Builder meta ){
-            this.meta = meta;
-            return this;
+            meta = new Meta.Builder();
         }
 
         public Builder data( Object data ){
@@ -69,6 +64,16 @@ public class Response{
 
         public Builder errors( Collection<String> errors ){
             this.errors = errors;
+            return this;
+        }
+
+        public Builder accountDetails(){
+            this.meta = meta.account( Auth.current() );
+            return this;
+        }
+
+        public Builder userDetails(){
+            //TODO implement
             return this;
         }
 

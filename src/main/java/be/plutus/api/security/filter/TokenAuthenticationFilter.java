@@ -1,4 +1,4 @@
-package be.plutus.api.security;
+package be.plutus.api.security.filter;
 
 import be.plutus.api.security.exception.*;
 import be.plutus.core.model.account.Account;
@@ -60,12 +60,13 @@ public class TokenAuthenticationFilter extends GenericFilterBean{
                     Account account = token.getAccount();
 
                     if( isValid( account ) ){
+                        account.clearPassword();
                         SecurityContextHolder
                                 .getContext()
                                 .setAuthentication(
                                         new UsernamePasswordAuthenticationToken(
-                                                account.getId(),
-                                                account.getPassword(),
+                                                account,
+                                                null,
                                                 Collections.singletonList( ( () -> "ROLE_BASIC" ) )
                                         )
                                 );
@@ -75,7 +76,7 @@ public class TokenAuthenticationFilter extends GenericFilterBean{
 
             chain.doFilter( request, response );
         }catch( AuthenticationException e ){
-            authenticationExceptionHandler.handle( request, response, e );
+            authenticationExceptionHandler.handle( response, e );
         }
     }
 

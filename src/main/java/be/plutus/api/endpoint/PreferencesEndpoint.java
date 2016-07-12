@@ -3,14 +3,13 @@ package be.plutus.api.endpoint;
 import be.plutus.api.request.PreferenceCreateDTO;
 import be.plutus.api.request.PreferenceValueCreateDTO;
 import be.plutus.api.response.Response;
-import be.plutus.api.response.meta.Meta;
+import be.plutus.api.security.Auth;
 import be.plutus.core.model.preferences.Preferences;
 import be.plutus.core.service.PreferencesService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -27,38 +26,49 @@ public class PreferencesEndpoint{
     private PreferencesService preferencesService;
 
     @RequestMapping( method = RequestMethod.GET )
-    public ResponseEntity<Response> get( Authentication authentication ){
+    public ResponseEntity<Response> get(){
 
-        Preferences preferences = preferencesService.getPreferenceFromAccount( (Integer)authentication.getPrincipal() );
-        return new ResponseEntity<>( new Response.Builder().data( preferences.toMap() ).success().build(), HttpStatus.OK );
+        Preferences preferences = preferencesService.getPreferenceFromAccount( Auth.current().getId() );
+        return new ResponseEntity<>( new Response.Builder()
+                .data( preferences.toMap() )
+                .success()
+                .build(), HttpStatus.OK );
     }
 
     @RequestMapping( method = RequestMethod.POST )
-    public ResponseEntity<Response> post( @RequestBody PreferenceCreateDTO dto, Authentication authentication){
+    public ResponseEntity<Response> post( @RequestBody PreferenceCreateDTO dto ){
 
-        Preferences preferences = preferencesService.getPreferenceFromAccount( (Integer)authentication.getPrincipal() );
+        Preferences preferences = preferencesService.getPreferenceFromAccount( Auth.current().getId() );
 
         preferencesService.addPreference( preferences.getId(), dto.getKey(), dto.getValue() );
-        return new ResponseEntity<>( new Response.Builder().success().build(), HttpStatus.OK );
+        return new ResponseEntity<>( new Response.Builder()
+                .success()
+                .build(), HttpStatus.OK );
     }
 
     @RequestMapping( value = "/{key}", method = RequestMethod.GET )
-    public ResponseEntity<Response> getByKey( @PathVariable( "key" ) String key, Authentication authentication){
+    public ResponseEntity<Response> getByKey( @PathVariable( "key" ) String key ){
 
-        Preferences preferences = preferencesService.getPreferenceFromAccount( (Integer)authentication.getPrincipal() );
+        Preferences preferences = preferencesService.getPreferenceFromAccount( Auth.current().getId() );
 
         Map<String, String> preference = new HashMap<>();
-        preference.put( key, preferences.get(key) );
+        preference.put( key, preferences.get( key ) );
 
-        return new ResponseEntity<>( new Response.Builder().data( preference ).success().build(), HttpStatus.OK );
+        return new ResponseEntity<>( new Response.Builder()
+                .data( preference )
+                .success()
+                .build(), HttpStatus.OK );
     }
 
     @RequestMapping( value = "/{key}", method = RequestMethod.PUT )
-    public ResponseEntity<Response> putKey( @PathVariable( "key" ) String key, @RequestBody PreferenceValueCreateDTO dto, Authentication authentication){
+    public ResponseEntity<Response> putKey( @PathVariable( "key" ) String key, @RequestBody PreferenceValueCreateDTO dto ){
 
-        Preferences preferences = preferencesService.getPreferenceFromAccount( (Integer)authentication.getPrincipal() );
+        Preferences preferences = preferencesService.getPreferenceFromAccount( Auth.current().getId() );
 
         preferencesService.addPreference( preferences.getId(), key, dto.getValue() );
-        return new ResponseEntity<>( new Response.Builder().success().build(), HttpStatus.OK );
+
+        return new ResponseEntity<>( new Response.Builder()
+                .success()
+                .build(), HttpStatus.OK );
     }
 }

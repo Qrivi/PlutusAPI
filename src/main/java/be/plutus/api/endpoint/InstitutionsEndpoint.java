@@ -28,13 +28,13 @@ public class InstitutionsEndpoint{
     public ResponseEntity<Response> get(){
         List<InstitutionDTO> institutions = locationService.getAllInstitutions()
                 .stream()
-                .map( institution ->  {
+                .map( institution -> {
                     InstitutionDTO dto = new InstitutionDTO();
                     dto.setName( institution.getName() );
                     dto.setSlur( institution.getSlur() );
                     dto.setHint( institution.getHint() );
                     return dto;
-                }).collect( Collectors.toList() );
+                } ).collect( Collectors.toList() );
         return new ResponseEntity<>( new Response.Builder().data( institutions ).success().build(), HttpStatus.OK );
     }
 
