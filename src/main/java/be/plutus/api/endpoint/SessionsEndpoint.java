@@ -1,9 +1,9 @@
 package be.plutus.api.endpoint;
 
-import be.plutus.api.response.RequestDTO;
+import be.plutus.api.security.SecurityContext;
+import be.plutus.api.response.dto.RequestDTO;
 import be.plutus.api.response.Response;
-import be.plutus.api.response.SessionDTO;
-import be.plutus.api.security.Auth;
+import be.plutus.api.response.dto.SessionDTO;
 import be.plutus.core.model.token.Token;
 import be.plutus.core.service.AccountService;
 import be.plutus.core.service.TokenService;
@@ -34,10 +34,13 @@ public class SessionsEndpoint{
 
     @RequestMapping( method = RequestMethod.GET )
     public ResponseEntity<Response> get(){
-        return new ResponseEntity<>( new Response.Builder()
+
+        Response response = new Response.Builder()
                 .data( getSessions() )
                 .success()
-                .build(), HttpStatus.OK );
+                .build();
+
+        return new ResponseEntity<>( response, HttpStatus.OK );
     }
 
     @RequestMapping( value = "/{id}", method = RequestMethod.GET )
@@ -48,46 +51,52 @@ public class SessionsEndpoint{
         if( id < 0 || id > sessions.size() - 1 )
             return new ResponseEntity<>( new Response.Builder().notFound().build(), HttpStatus.NOT_FOUND );
 
-        return new ResponseEntity<>( new Response.Builder()
+        Response response = new Response.Builder()
                 .data( sessions.get( id ) )
                 .success()
-                .build(), HttpStatus.OK );
+                .build();
+
+        return new ResponseEntity<>( response, HttpStatus.OK );
     }
 
     @RequestMapping( value = "/{id}", method = RequestMethod.DELETE )
     public ResponseEntity<Response> delete( @PathVariable( value = "id" ) Integer id ){
 
-        List<Token> tokens = tokenService.getTokensFromAccount( Auth.current().getId() );
+        List<Token> tokens = tokenService.getTokensFromAccount( SecurityContext.getAccount().getId() );
 
         if( id < 0 || id > tokens.size() - 1 )
             return new ResponseEntity<>( new Response.Builder().notFound().build(), HttpStatus.NOT_FOUND );
 
         tokenService.deactivateToken( tokens.get( id ).getId() );
 
-        return new ResponseEntity<>( new Response.Builder()
+        Response response = new Response.Builder()
                 .success()
-                .build(), HttpStatus.OK );
+                .build();
+
+        return new ResponseEntity<>( response, HttpStatus.OK );
     }
 
     @RequestMapping( value = "/{id}/requests", method = RequestMethod.GET )
     public ResponseEntity<Response> getRequests( @PathVariable( value = "id" ) Integer id ){
 
-        List<Token> tokens = tokenService.getTokensFromAccount( Auth.current().getId() );
+        List<Token> tokens = tokenService.getTokensFromAccount( SecurityContext.getAccount().getId() );
 
         if( id < 0 || id > tokens.size() - 1 )
             return new ResponseEntity<>( new Response.Builder().notFound().build(), HttpStatus.NOT_FOUND );
 
         List<RequestDTO> requests =  getRequestsFromToken( tokens.get( id ).getId() );
 
-        return new ResponseEntity<>( new Response.Builder()
+        Response response = new Response.Builder()
                 .data( requests )
                 .success()
-                .build(), HttpStatus.OK );
+                .build();
+
+        return new ResponseEntity<>( response, HttpStatus.OK );
     }
 
     private List<SessionDTO> getSessions(){
         final int[] index = {0};
-        return tokenService.getTokensFromAccount( Auth.current().getId() )
+        return tokenService.getTokensFromAccount( SecurityContext.getAccount().getId() )
                 .stream().map( token -> {
                     SessionDTO dto = new SessionDTO();
                     dto.setIndex( index[0]++ );

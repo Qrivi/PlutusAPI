@@ -1,9 +1,9 @@
 package be.plutus.api.endpoint;
 
+import be.plutus.api.security.SecurityContext;
 import be.plutus.api.request.PreferenceCreateDTO;
 import be.plutus.api.request.PreferenceValueCreateDTO;
 import be.plutus.api.response.Response;
-import be.plutus.api.security.Auth;
 import be.plutus.core.model.preferences.Preferences;
 import be.plutus.core.service.PreferencesService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,47 +28,57 @@ public class PreferencesEndpoint{
     @RequestMapping( method = RequestMethod.GET )
     public ResponseEntity<Response> get(){
 
-        Preferences preferences = preferencesService.getPreferenceFromAccount( Auth.current().getId() );
-        return new ResponseEntity<>( new Response.Builder()
-                .data( preferences.toMap() )
+        Preferences preferences = preferencesService.getPreferenceFromAccount( SecurityContext.getAccount().getId() );
+
+        Response response = new Response.Builder()
+                .data(  preferences.toMap() )
                 .success()
-                .build(), HttpStatus.OK );
+                .build();
+
+        return new ResponseEntity<>( response, HttpStatus.OK );
     }
 
     @RequestMapping( method = RequestMethod.POST )
     public ResponseEntity<Response> post( @RequestBody PreferenceCreateDTO dto ){
 
-        Preferences preferences = preferencesService.getPreferenceFromAccount( Auth.current().getId() );
+        Preferences preferences = preferencesService.getPreferenceFromAccount( SecurityContext.getAccount().getId() );
 
         preferencesService.addPreference( preferences.getId(), dto.getKey(), dto.getValue() );
-        return new ResponseEntity<>( new Response.Builder()
-                .success()
-                .build(), HttpStatus.OK );
+
+        Response response = new Response.Builder()
+                .created()
+                .build();
+
+        return new ResponseEntity<>( response, HttpStatus.OK );
     }
 
     @RequestMapping( value = "/{key}", method = RequestMethod.GET )
     public ResponseEntity<Response> getByKey( @PathVariable( "key" ) String key ){
 
-        Preferences preferences = preferencesService.getPreferenceFromAccount( Auth.current().getId() );
+        Preferences preferences = preferencesService.getPreferenceFromAccount( SecurityContext.getAccount().getId() );
 
         Map<String, String> preference = new HashMap<>();
         preference.put( key, preferences.get( key ) );
 
-        return new ResponseEntity<>( new Response.Builder()
+        Response response = new Response.Builder()
                 .data( preference )
                 .success()
-                .build(), HttpStatus.OK );
+                .build();
+
+        return new ResponseEntity<>( response, HttpStatus.OK );
     }
 
     @RequestMapping( value = "/{key}", method = RequestMethod.PUT )
     public ResponseEntity<Response> putKey( @PathVariable( "key" ) String key, @RequestBody PreferenceValueCreateDTO dto ){
 
-        Preferences preferences = preferencesService.getPreferenceFromAccount( Auth.current().getId() );
+        Preferences preferences = preferencesService.getPreferenceFromAccount( SecurityContext.getAccount().getId() );
 
         preferencesService.addPreference( preferences.getId(), key, dto.getValue() );
 
-        return new ResponseEntity<>( new Response.Builder()
+        Response response = new Response.Builder()
                 .success()
-                .build(), HttpStatus.OK );
+                .build();
+
+        return new ResponseEntity<>( response, HttpStatus.OK );
     }
 }

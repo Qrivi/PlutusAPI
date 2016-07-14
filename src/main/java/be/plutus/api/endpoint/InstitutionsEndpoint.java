@@ -1,6 +1,6 @@
 package be.plutus.api.endpoint;
 
-import be.plutus.api.response.InstitutionDTO;
+import be.plutus.api.response.dto.InstitutionDTO;
 import be.plutus.api.response.Response;
 import be.plutus.core.service.LocationService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +26,7 @@ public class InstitutionsEndpoint{
 
     @RequestMapping( method = RequestMethod.GET )
     public ResponseEntity<Response> get(){
+
         List<InstitutionDTO> institutions = locationService.getAllInstitutions()
                 .stream()
                 .map( institution -> {
@@ -35,7 +36,13 @@ public class InstitutionsEndpoint{
                     dto.setHint( institution.getHint() );
                     return dto;
                 } ).collect( Collectors.toList() );
-        return new ResponseEntity<>( new Response.Builder().data( institutions ).success().build(), HttpStatus.OK );
+
+        Response response = new Response.Builder()
+                .data( institutions )
+                .success()
+                .build();
+
+        return new ResponseEntity<>( response, HttpStatus.OK );
     }
 
 }

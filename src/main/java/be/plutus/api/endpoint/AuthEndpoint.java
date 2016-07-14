@@ -2,7 +2,7 @@ package be.plutus.api.endpoint;
 
 import be.plutus.api.request.AuthenticationDTO;
 import be.plutus.api.response.Response;
-import be.plutus.api.response.TokenDTO;
+import be.plutus.api.response.dto.TokenDTO;
 import be.plutus.api.util.MessageService;
 import be.plutus.core.model.account.Account;
 import be.plutus.core.model.account.AccountStatus;
@@ -45,27 +45,25 @@ public class AuthEndpoint{
             return EndpointUtils.createErrorResponse( result );
 
         Account account = accountService.getAccount( dto.getEmail() );
+
         Response.Builder response = new Response.Builder();
 
         if( account == null ){
-            return new ResponseEntity<>( response
-                    .errors( messageService.get( "NotValid.AuthEndpoint.email" ) )
-                    .badRequest()
-                    .build(), HttpStatus.BAD_REQUEST );
+            response.errors( messageService.get( "NotValid.AuthEndpoint.email" ) );
+            response.badRequest();
+            return new ResponseEntity<>( response.build(), HttpStatus.BAD_REQUEST );
         }
 
         if( !account.isPasswordValid( dto.getPassword() ) ){
-            return new ResponseEntity<>( response
-                    .errors( messageService.get( "NotValid.AuthEndpoint.password" ) )
-                    .badRequest()
-                    .build(), HttpStatus.BAD_REQUEST );
+            response.errors( messageService.get( "NotValid.AuthEndpoint.password" ) );
+            response.badRequest();
+            return new ResponseEntity<>( response.build(), HttpStatus.BAD_REQUEST );
         }
 
         if( account.getStatus() != AccountStatus.ACTIVE ){
-            return new ResponseEntity<>( response
-                    .errors( account.getStatus().getStatus() )
-                    .forbidden()
-                    .build(), HttpStatus.FORBIDDEN );
+            response.errors( account.getStatus().getStatus() );
+            response.forbidden();
+            return new ResponseEntity<>( response.build(), HttpStatus.FORBIDDEN );
         }
 
         Token token = tokenService.createToken( account, dto.getApplication(), dto.getDevice(), request.getRemoteAddr() );
@@ -76,9 +74,9 @@ public class AuthEndpoint{
         tokenDTO.setDevice( token.getDeviceName() );
         tokenDTO.setExpires( token.getExpiryDate() );
 
-        return new ResponseEntity<>( response
-                .data( tokenDTO )
-                .success()
-                .build(), HttpStatus.OK );
+        response.data( tokenDTO );
+        response.success();
+
+        return new ResponseEntity<>( response.build(), HttpStatus.OK );
     }
 }

@@ -1,6 +1,7 @@
 package be.plutus.api.response;
 
-import be.plutus.api.security.Auth;
+import be.plutus.core.model.account.Account;
+import be.plutus.core.model.account.User;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -11,35 +12,22 @@ public class Response{
     private Object data;
     private Collection<String> errors;
 
-    public Response(){
+    Response( Meta meta, Object data, Collection<String> errors ){
+        this.meta = meta;
+        this.data = data;
+        this.errors = errors;
     }
 
     public Meta getMeta(){
         return meta;
     }
 
-    public void setMeta( Meta meta ){
-        this.meta = meta;
-    }
-
     public Object getData(){
         return data;
     }
 
-    public void setData( Object data ){
-        this.data = data;
-    }
-
     public Collection<String> getErrors(){
         return errors;
-    }
-
-    public void setErrors( String... errors ){
-        this.errors = Arrays.asList( errors );
-    }
-
-    public void setErrors( Collection<String> errors ){
-        this.errors = errors;
     }
 
     public static class Builder{
@@ -52,33 +40,25 @@ public class Response{
             meta = new Meta.Builder();
         }
 
-        public Builder data( Object data ){
-            this.data = data;
+        // META
+
+        public Builder accountDetails( Account account ){
+            this.meta = meta.account( account.getEmail(), account.getDefaultCurrency() );
             return this;
         }
 
-        public Builder errors( String... errors ){
-            this.errors = Arrays.asList( errors );
-            return this;
-        }
-
-        public Builder errors( Collection<String> errors ){
-            this.errors = errors;
-            return this;
-        }
-
-        public Builder accountDetails(){
-            this.meta = meta.account( Auth.current() );
-            return this;
-        }
-
-        public Builder userDetails(){
-            //TODO implement
+        public Builder userDetails( User user ){
+            this.meta = meta.user( String.format( "%s %s", user.getFirstName(), user.getLastName() ), user.getFetchDate() );
             return this;
         }
 
         public Builder success(){
             this.meta = this.meta.success();
+            return this;
+        }
+
+        public Builder created(){
+            this.meta = this.meta.created();
             return this;
         }
 
@@ -107,12 +87,29 @@ public class Response{
             return this;
         }
 
+        // DATA
+
+        public Builder data( Object data ){
+            this.data = data;
+            return this;
+        }
+
+        // ERRORS
+
+        public Builder errors( String... errors ){
+            this.errors = Arrays.asList( errors );
+            return this;
+        }
+
+        public Builder errors( Collection<String> errors ){
+            this.errors = errors;
+            return this;
+        }
+
+        // BUILD
+
         public Response build(){
-            Response response = new Response();
-            response.setMeta( meta.build() );
-            response.setErrors( errors );
-            response.setData( data );
-            return response;
+            return new Response(meta.build(), data, errors);
         }
     }
 }

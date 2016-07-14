@@ -1,8 +1,9 @@
 package be.plutus.api.config;
 
-import be.plutus.api.security.filter.AuthenticationExceptionHandler;
 import be.plutus.api.security.filter.TokenAuthenticationFilter;
+import be.plutus.api.util.MessageService;
 import be.plutus.core.service.TokenService;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -21,7 +22,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
     private TokenService tokenService;
 
     @Autowired
-    private AuthenticationExceptionHandler exceptionHandler;
+    private ObjectMapper objectMapper;
+
+    @Autowired
+    private MessageService messageService;
 
     @Override
     public void configure( WebSecurity web ) throws Exception {
@@ -37,7 +41,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
             .authorizeRequests()
                 .anyRequest().fullyAuthenticated()
         .and()
-            .addFilterBefore( new TokenAuthenticationFilter( tokenService, exceptionHandler ), BasicAuthenticationFilter.class )
+            .addFilterBefore( new TokenAuthenticationFilter( tokenService, objectMapper, messageService ), BasicAuthenticationFilter.class )
             .sessionManagement()
             .sessionCreationPolicy( SessionCreationPolicy.STATELESS )
         .and()

@@ -1,6 +1,5 @@
 package be.plutus.api.response;
 
-import be.plutus.core.model.account.Account;
 import be.plutus.core.model.currency.Currency;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -19,7 +18,7 @@ public class Meta{
     private Date requestTimestamp;
     private int responseStatusCode;
 
-    public Meta( String user, Date updated, String account, Currency currency, Date requestTimestamp, int responseStatusCode ){
+    Meta( String user, Date updated, String account, Currency currency, Date requestTimestamp, int responseStatusCode ){
         this.user = user;
         this.updated = updated;
         this.account = account;
@@ -65,9 +64,6 @@ public class Meta{
         private String account;
         private Currency currency;
 
-        private Date requestTimestamp;
-        private int responseStatusCode;
-
         private Date timestamp;
         private int statusCode;
 
@@ -77,15 +73,21 @@ public class Meta{
             return this;
         }
 
-        public Builder account( Account account ){
-            this.account = account.getEmail();
-            this.currency = account.getDefaultCurrency();
+        public Builder account( String email, Currency currency ){
+            this.account = email;
+            this.currency = currency;
             return this;
         }
 
         public Builder success(){
             this.timestamp = new Date();
             this.statusCode = 200;
+            return this;
+        }
+
+        public Builder created(){
+            this.timestamp = new Date();
+            this.statusCode = 201;
             return this;
         }
 

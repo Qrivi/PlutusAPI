@@ -1,4 +1,4 @@
-package be.plutus.api.response;
+package be.plutus.api.response.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 

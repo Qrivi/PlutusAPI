@@ -1,6 +1,6 @@
 package be.plutus.api.security.filter;
 
-import be.plutus.api.security.exception.*;
+import be.plutus.api.security.*;
 import be.plutus.core.model.account.Account;
 import be.plutus.core.model.account.AccountStatus;
 import be.plutus.core.model.token.Token;
@@ -22,7 +22,7 @@ import java.util.Date;
 public class TokenAuthenticationFilter extends GenericFilterBean{
 
     private static String PARAMETER_SECURITY_TOKEN = "token";
-    private static String HEADER_SECURITY_TOKEN = "X-Auth-Token";
+    private static String HEADER_SECURITY_TOKEN = "X-SecurityContext-Token";
 
     private TokenService tokenService;
     private AuthenticationExceptionHandler authenticationExceptionHandler;

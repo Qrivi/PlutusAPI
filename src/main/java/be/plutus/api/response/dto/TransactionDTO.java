@@ -1,4 +1,4 @@
-package be.plutus.api.response;
+package be.plutus.api.response.dto;
 
 import be.plutus.core.model.location.Location;
 import be.plutus.core.model.transaction.TransactionType;

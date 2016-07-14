@@ -20,7 +20,7 @@ public class MessageService{
         }
     }
 
-    public String get( String id, Object[] args ){
+    public String get( String id, Object... args ){
         try {
             return messageSource.getMessage( id, args, LocaleContextHolder.getLocale() );
         } catch( NoSuchMessageException e ) {

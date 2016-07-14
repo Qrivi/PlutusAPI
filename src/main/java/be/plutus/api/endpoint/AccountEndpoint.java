@@ -3,9 +3,9 @@ package be.plutus.api.endpoint;
 import be.plutus.api.request.AccountCreateDTO;
 import be.plutus.api.request.AccountRemoveDTO;
 import be.plutus.api.request.AccountUpdateDTO;
-import be.plutus.api.response.AccountDTO;
+import be.plutus.api.response.dto.AccountDTO;
 import be.plutus.api.response.Response;
-import be.plutus.api.security.Auth;
+import be.plutus.api.security.SecurityContext;
 import be.plutus.core.model.account.Account;
 import be.plutus.core.service.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,17 +33,19 @@ public class AccountEndpoint{
     @RequestMapping( method = RequestMethod.GET )
     public ResponseEntity<Response> get(){
 
-        Account account = accountService.getAccount( Auth.current().getId() );
+        Account account = accountService.getAccount( SecurityContext.getAccount().getId() );
 
         AccountDTO dto = new AccountDTO();
         dto.setEmail( account.getEmail() );
         dto.setCurrency( account.getDefaultCurrency() );
         dto.setCreated( account.getCreationDate() );
 
-        return new ResponseEntity<>( new Response.Builder()
+        Response response = new Response.Builder()
                 .data( dto )
                 .success()
-                .build(), HttpStatus.OK );
+                .build();
+
+        return new ResponseEntity<>( response, HttpStatus.OK );
     }
 
     @RequestMapping( method = RequestMethod.POST )
@@ -54,9 +56,11 @@ public class AccountEndpoint{
 
         accountService.createAccount( dto.getEmail(), dto.getPassword(), dto.getDefaultCurrency() );
 
-        return new ResponseEntity<>( new Response.Builder()
-                .success()
-                .build(), HttpStatus.CREATED );
+        Response response = new Response.Builder()
+                .created()
+                .build();
+
+        return new ResponseEntity<>( response, HttpStatus.CREATED );
     }
 
     @RequestMapping( method = RequestMethod.PUT )
@@ -65,11 +69,13 @@ public class AccountEndpoint{
         if( result.hasErrors() )
             return EndpointUtils.createErrorResponse( result );
 
-        accountService.updateAccount( Auth.current().getId(), dto.getNewEmail(), dto.getNewPassword(), dto.getNewDefaultCurrency() );
+        accountService.updateAccount( SecurityContext.getAccount().getId(), dto.getNewEmail(), dto.getNewPassword(), dto.getNewDefaultCurrency() );
 
-        return new ResponseEntity<>( new Response.Builder()
+        Response response = new Response.Builder()
                 .success()
-                .build(), HttpStatus.OK );
+                .build();
+
+        return new ResponseEntity<>( response, HttpStatus.OK );
     }
 
     @RequestMapping( method = RequestMethod.DELETE )
@@ -78,10 +84,12 @@ public class AccountEndpoint{
         if( result.hasErrors() )
             return EndpointUtils.createErrorResponse( result );
 
-        accountService.removeAccount( Auth.current().getId() );
+        accountService.removeAccount( SecurityContext.getAccount().getId() );
 
-        return new ResponseEntity<>( new Response.Builder()
+        Response response = new Response.Builder()
                 .success()
-                .build(), HttpStatus.OK );
+                .build();
+
+        return new ResponseEntity<>( response, HttpStatus.OK );
     }
 }
