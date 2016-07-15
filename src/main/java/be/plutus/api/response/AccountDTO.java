@@ -1,4 +1,4 @@
-package be.plutus.api.response.dto;
+package be.plutus.api.response;
 
 import be.plutus.core.model.currency.Currency;
 import com.fasterxml.jackson.annotation.JsonFormat;

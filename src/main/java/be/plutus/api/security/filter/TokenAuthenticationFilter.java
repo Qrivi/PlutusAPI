@@ -1,10 +1,13 @@
 package be.plutus.api.security.filter;
 
+import be.plutus.api.response.Response;
 import be.plutus.api.security.*;
+import be.plutus.api.util.MessageService;
 import be.plutus.core.model.account.Account;
 import be.plutus.core.model.account.AccountStatus;
 import be.plutus.core.model.token.Token;
 import be.plutus.core.service.TokenService;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.GenericFilterBean;
@@ -25,11 +28,13 @@ public class TokenAuthenticationFilter extends GenericFilterBean{
     private static String HEADER_SECURITY_TOKEN = "X-SecurityContext-Token";
 
     private TokenService tokenService;
-    private AuthenticationExceptionHandler authenticationExceptionHandler;
+    private ObjectMapper objectMapper;
+    private MessageService messageService;
 
-    public TokenAuthenticationFilter( TokenService tokenService, AuthenticationExceptionHandler authenticationExceptionHandler ){
+    public TokenAuthenticationFilter( TokenService tokenService, ObjectMapper objectMapper, MessageService messageService ){
         this.tokenService = tokenService;
-        this.authenticationExceptionHandler = authenticationExceptionHandler;
+        this.objectMapper = objectMapper;
+        this.messageService = messageService;
     }
 
     @Override
@@ -76,7 +81,15 @@ public class TokenAuthenticationFilter extends GenericFilterBean{
 
             chain.doFilter( request, response );
         }catch( AuthenticationException e ){
-            authenticationExceptionHandler.handle( response, e );
+            Response.Builder builder = new Response.Builder();
+
+            builder = e.getStatus() == 403 ? builder.forbidden() : builder.unauthorized();
+            builder = builder.errors( messageService.get( e.getClass().getName() ) );
+
+            response.setContentType( "application/json" );
+            response.setStatus( e.getStatus() );
+
+            objectMapper.writeValue( res.getOutputStream(), builder.build() );
         }
     }
 

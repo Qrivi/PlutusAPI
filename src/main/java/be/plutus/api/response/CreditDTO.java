@@ -1,4 +1,4 @@
-package be.plutus.api.response.dto;
+package be.plutus.api.response;
 
 public class CreditDTO{
 

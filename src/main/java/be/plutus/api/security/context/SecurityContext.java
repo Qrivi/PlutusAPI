@@ -1,4 +1,4 @@
-package be.plutus.api.security;
+package be.plutus.api.security.context;
 
 import be.plutus.core.model.account.Account;
 import org.springframework.security.core.context.SecurityContextHolder;

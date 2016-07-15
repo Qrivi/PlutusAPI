@@ -1,9 +1,9 @@
 package be.plutus.api.endpoint;
 
-import be.plutus.api.security.SecurityContext;
-import be.plutus.api.response.dto.RequestDTO;
+import be.plutus.api.security.context.SecurityContext;
+import be.plutus.api.response.RequestDTO;
 import be.plutus.api.response.Response;
-import be.plutus.api.response.dto.SessionDTO;
+import be.plutus.api.response.SessionDTO;
 import be.plutus.core.model.token.Token;
 import be.plutus.core.service.AccountService;
 import be.plutus.core.service.TokenService;

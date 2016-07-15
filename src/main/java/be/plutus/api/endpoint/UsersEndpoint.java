@@ -1,8 +1,10 @@
 package be.plutus.api.endpoint;
 
-import be.plutus.api.response.InstitutionDTO;
 import be.plutus.api.response.Response;
-import be.plutus.core.service.LocationService;
+import be.plutus.api.response.UserDTO;
+import be.plutus.api.security.context.SecurityContext;
+import be.plutus.core.model.account.Account;
+import be.plutus.core.service.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -16,33 +18,39 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping(
-        path = "/institutions",
+        path = "/account/users",
         consumes = MediaType.APPLICATION_JSON_VALUE,
         produces = MediaType.APPLICATION_JSON_VALUE )
-public class InstitutionsEndpoint{
+public class UsersEndpoint{
 
     @Autowired
-    LocationService locationService;
+    AccountService accountService;
 
     @RequestMapping( method = RequestMethod.GET )
     public ResponseEntity<Response> get(){
 
-        List<InstitutionDTO> institutions = locationService.getAllInstitutions()
+        Account account = accountService.getAccount( SecurityContext.getAccount().getId() );
+
+        final int[] index = {0};
+        List<UserDTO> users = account.getUsers()
                 .stream()
-                .map( institution -> {
-                    InstitutionDTO dto = new InstitutionDTO();
-                    dto.setName( institution.getName() );
-                    dto.setSlur( institution.getSlur() );
-                    dto.setHint( institution.getHint() );
+                .map( user -> {
+                    UserDTO dto = new UserDTO();
+                    dto.setIndex( index[0]++ );
+                    dto.setUsername( user.getUsername() );
+                    dto.setFirstName( user.getFirstName() );
+                    dto.setLastName( user.getLastName() );
+                    dto.setInstitution( user.getInstitution() );
+                    dto.setUpdated( user.getFetchDate() );
                     return dto;
                 } ).collect( Collectors.toList() );
 
+
         Response response = new Response.Builder()
-                .data( institutions )
+                .data( users )
                 .success()
                 .build();
 
         return new ResponseEntity<>( response, HttpStatus.OK );
     }
-
 }
