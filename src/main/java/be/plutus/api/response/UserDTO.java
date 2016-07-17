@@ -11,7 +11,8 @@ public class UserDTO{
     private String firstName;
     private String lastName;
     private String username;
-    private Institution institution;
+    private InstitutionDTO institution;
+    private Date created;
     private Date updated;
 
     public UserDTO(){
@@ -49,12 +50,25 @@ public class UserDTO{
         this.username = username;
     }
 
-    public Institution getInstitution(){
+    public InstitutionDTO getInstitution(){
         return institution;
     }
 
-    public void setInstitution( Institution institution ){
+    public void setInstitution( InstitutionDTO institution ){
         this.institution = institution;
+    }
+
+    public Date getCreated(){
+        return created;
+    }
+
+    @JsonFormat( pattern = "yyyy-MM-dd'T'HH:mm:ssZ" )
+    public Date getCreatedISO8601(){
+        return created;
+    }
+
+    public void setCreated( Date created ){
+        this.created = created;
     }
 
     public Date getUpdated(){

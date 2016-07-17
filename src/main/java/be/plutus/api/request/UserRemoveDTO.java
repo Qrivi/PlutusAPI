@@ -5,8 +5,8 @@ import org.hibernate.validator.constraints.NotBlank;
 
 public class UserRemoveDTO{
 
-    @NotBlank( message = "{NotBlank.AccountRemoveDTO.password}" )
-    @CorrectPassword( message = "{CorrectPassword.AccountRemoveDTO.password}" )
+    @NotBlank( message = "{NotBlank.UserRemoveDTO.password}" )
+    @CorrectPassword( message = "{CorrectPassword.UserRemoveDTO.password}" )
     private String password;
 
     public UserRemoveDTO(){

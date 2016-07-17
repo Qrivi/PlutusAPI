@@ -4,7 +4,6 @@ public class InstitutionDTO{
 
     private String name;
     private String slur;
-    private String hint;
 
     public InstitutionDTO(){
     }
@@ -23,13 +22,5 @@ public class InstitutionDTO{
 
     public void setSlur( String slur ){
         this.slur = slur;
-    }
-
-    public String getHint(){
-        return hint;
-    }
-
-    public void setHint( String hint ){
-        this.hint = hint;
     }
 }

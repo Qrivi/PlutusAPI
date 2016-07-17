@@ -3,10 +3,20 @@ package be.plutus.api.response;
 import be.plutus.core.model.currency.Currency;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 import java.util.Date;
 
-@JsonInclude( JsonInclude.Include.NON_NULL)
+@JsonPropertyOrder( {
+        "user",
+        "updated",
+        "account",
+        "currency",
+        "responseStatusCode",
+        "requestTimestamp",
+        "requestTimestampISO8601",
+})
+@JsonInclude( JsonInclude.Include.NON_NULL )
 public class Meta{
 
     private String user;
@@ -18,7 +28,7 @@ public class Meta{
     private Date requestTimestamp;
     private int responseStatusCode;
 
-    Meta( String user, Date updated, String account, Currency currency, Date requestTimestamp, int responseStatusCode ){
+    private Meta( String user, Date updated, String account, Currency currency, Date requestTimestamp, int responseStatusCode ){
         this.user = user;
         this.updated = updated;
         this.account = account;
@@ -67,14 +77,22 @@ public class Meta{
         private Date timestamp;
         private int statusCode;
 
-        public Builder user( String user, Date updated ){
+        public Builder user( String user ){
             this.user = user;
+            return this;
+        }
+
+        public Builder updated( Date updated ){
             this.updated = updated;
             return this;
         }
 
-        public Builder account( String email, Currency currency ){
+        public Builder account( String email ){
             this.account = email;
+            return this;
+        }
+
+        public Builder currency( Currency currency ){
             this.currency = currency;
             return this;
         }

@@ -32,6 +32,8 @@ public class SessionsEndpoint{
     @Autowired
     AccountService accountService;
 
+    //region GET /account/sessions
+
     @RequestMapping( method = RequestMethod.GET )
     public ResponseEntity<Response> get(){
 
@@ -43,31 +45,39 @@ public class SessionsEndpoint{
         return new ResponseEntity<>( response, HttpStatus.OK );
     }
 
-    @RequestMapping( value = "/{id}", method = RequestMethod.GET )
-    public ResponseEntity<Response> getByIndex( @PathVariable( value = "id" ) Integer id ){
+    //endregion
+
+    //region GET /account/sessions/{index}
+
+    @RequestMapping( value = "/{index}", method = RequestMethod.GET )
+    public ResponseEntity<Response> getByIndex( @PathVariable( value = "index" ) Integer index ){
 
         List<SessionDTO> sessions = getSessions();
 
-        if( id < 0 || id > sessions.size() - 1 )
+        if( index < 0 || index > sessions.size() - 1 )
             return new ResponseEntity<>( new Response.Builder().notFound().build(), HttpStatus.NOT_FOUND );
 
         Response response = new Response.Builder()
-                .data( sessions.get( id ) )
+                .data( sessions.get( index ) )
                 .success()
                 .build();
 
         return new ResponseEntity<>( response, HttpStatus.OK );
     }
 
-    @RequestMapping( value = "/{id}", method = RequestMethod.DELETE )
-    public ResponseEntity<Response> delete( @PathVariable( value = "id" ) Integer id ){
+    //endregion
+
+    //region DELETE /account/sessions/{index}
+
+    @RequestMapping( value = "/{index}", method = RequestMethod.DELETE )
+    public ResponseEntity<Response> delete( @PathVariable( value = "index" ) Integer index ){
 
         List<Token> tokens = tokenService.getTokensFromAccount( SecurityContext.getAccount().getId() );
 
-        if( id < 0 || id > tokens.size() - 1 )
+        if( index < 0 || index > tokens.size() - 1 )
             return new ResponseEntity<>( new Response.Builder().notFound().build(), HttpStatus.NOT_FOUND );
 
-        tokenService.deactivateToken( tokens.get( id ).getId() );
+        tokenService.deactivateToken( tokens.get( index ).getId() );
 
         Response response = new Response.Builder()
                 .success()
@@ -76,15 +86,19 @@ public class SessionsEndpoint{
         return new ResponseEntity<>( response, HttpStatus.OK );
     }
 
-    @RequestMapping( value = "/{id}/requests", method = RequestMethod.GET )
-    public ResponseEntity<Response> getRequests( @PathVariable( value = "id" ) Integer id ){
+    //endregion
+
+    //region GET /account/sessions/{index}/requests
+
+    @RequestMapping( value = "/{index}/requests", method = RequestMethod.GET )
+    public ResponseEntity<Response> getRequests( @PathVariable( value = "index" ) Integer index ){
 
         List<Token> tokens = tokenService.getTokensFromAccount( SecurityContext.getAccount().getId() );
 
-        if( id < 0 || id > tokens.size() - 1 )
+        if( index < 0 || index > tokens.size() - 1 )
             return new ResponseEntity<>( new Response.Builder().notFound().build(), HttpStatus.NOT_FOUND );
 
-        List<RequestDTO> requests =  getRequestsFromToken( tokens.get( id ).getId() );
+        List<RequestDTO> requests =  getRequestsFromToken( tokens.get( index ).getId() );
 
         Response response = new Response.Builder()
                 .data( requests )
@@ -93,6 +107,8 @@ public class SessionsEndpoint{
 
         return new ResponseEntity<>( response, HttpStatus.OK );
     }
+
+    //endregion
 
     private List<SessionDTO> getSessions(){
         final int[] index = {0};

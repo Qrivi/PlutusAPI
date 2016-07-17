@@ -2,10 +2,13 @@ package be.plutus.api.response;
 
 import be.plutus.core.model.account.Account;
 import be.plutus.core.model.account.User;
+import be.plutus.core.model.currency.Currency;
+import com.fasterxml.jackson.annotation.JsonInclude;
 
 import java.util.Arrays;
 import java.util.Collection;
 
+@JsonInclude( JsonInclude.Include.NON_NULL )
 public class Response{
 
     private Meta meta;
@@ -40,15 +43,22 @@ public class Response{
             meta = new Meta.Builder();
         }
 
-        // META
+        //region META
 
-        public Builder accountDetails( Account account ){
-            this.meta = meta.account( account.getEmail(), account.getDefaultCurrency() );
+        public Builder account( Account account ){
+            this.meta = meta.account( account.getEmail() );
+            this.meta = meta.currency( account.getDefaultCurrency() );
             return this;
         }
 
-        public Builder userDetails( User user ){
-            this.meta = meta.user( String.format( "%s %s", user.getFirstName(), user.getLastName() ), user.getFetchDate() );
+        public Builder user( User user ){
+            this.meta = meta.user( user.getUsername() );
+            this.meta = meta.updated( user.getFetchDate() );
+            return this;
+        }
+
+        public Builder currency( Currency currency ){
+            this.meta = meta.currency( currency );
             return this;
         }
 
@@ -87,14 +97,18 @@ public class Response{
             return this;
         }
 
-        // DATA
+        //endregion
+
+        //region DATA
 
         public Builder data( Object data ){
             this.data = data;
             return this;
         }
 
-        // ERRORS
+        //endregion
+
+        //region ERRORS
 
         public Builder errors( String... errors ){
             this.errors = Arrays.asList( errors );
@@ -106,7 +120,7 @@ public class Response{
             return this;
         }
 
-        // BUILD
+        //endregion
 
         public Response build(){
             return new Response(meta.build(), data, errors);

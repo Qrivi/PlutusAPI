@@ -38,6 +38,8 @@ public class AuthEndpoint{
     @Autowired
     MessageService messageService;
 
+    //region POST /auth
+
     @RequestMapping( method = RequestMethod.POST )
     public ResponseEntity<Response> post( @Valid @RequestBody AuthenticationDTO dto, BindingResult result, HttpServletRequest request ){
 
@@ -79,4 +81,6 @@ public class AuthEndpoint{
 
         return new ResponseEntity<>( response.build(), HttpStatus.OK );
     }
+
+    //endregion
 }

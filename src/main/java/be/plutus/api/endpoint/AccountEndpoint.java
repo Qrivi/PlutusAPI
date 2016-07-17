@@ -30,6 +30,8 @@ public class AccountEndpoint{
     @Autowired
     AccountService accountService;
 
+    //region GET /account
+
     @RequestMapping( method = RequestMethod.GET )
     public ResponseEntity<Response> get(){
 
@@ -48,6 +50,10 @@ public class AccountEndpoint{
         return new ResponseEntity<>( response, HttpStatus.OK );
     }
 
+    //endregion
+
+    //region POST /account
+
     @RequestMapping( method = RequestMethod.POST )
     public ResponseEntity<Response> post( @Valid @RequestBody AccountCreateDTO dto, BindingResult result ){
 
@@ -62,6 +68,10 @@ public class AccountEndpoint{
 
         return new ResponseEntity<>( response, HttpStatus.CREATED );
     }
+
+    //endregion
+
+    //region PUT /account
 
     @RequestMapping( method = RequestMethod.PUT )
     public ResponseEntity<Response> put( @Valid @RequestBody AccountUpdateDTO dto, BindingResult result ){
@@ -78,6 +88,10 @@ public class AccountEndpoint{
         return new ResponseEntity<>( response, HttpStatus.OK );
     }
 
+    //endregion
+
+    //region DELETE /account
+
     @RequestMapping( method = RequestMethod.DELETE )
     public ResponseEntity<Response> delete( @Valid @RequestBody AccountRemoveDTO dto, BindingResult result ){
 
@@ -92,4 +106,6 @@ public class AccountEndpoint{
 
         return new ResponseEntity<>( response, HttpStatus.OK );
     }
+
+    //endregion
 }

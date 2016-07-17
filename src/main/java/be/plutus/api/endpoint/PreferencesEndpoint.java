@@ -25,6 +25,8 @@ public class PreferencesEndpoint{
     @Autowired
     private PreferencesService preferencesService;
 
+    //region GET /account/preferences
+
     @RequestMapping( method = RequestMethod.GET )
     public ResponseEntity<Response> get(){
 
@@ -37,6 +39,10 @@ public class PreferencesEndpoint{
 
         return new ResponseEntity<>( response, HttpStatus.OK );
     }
+
+    //endregion
+
+    //region POST /account/preferences
 
     @RequestMapping( method = RequestMethod.POST )
     public ResponseEntity<Response> post( @RequestBody PreferenceCreateDTO dto ){
@@ -51,6 +57,10 @@ public class PreferencesEndpoint{
 
         return new ResponseEntity<>( response, HttpStatus.OK );
     }
+
+    //endregion
+
+    //region GET /account/preferences/{key}
 
     @RequestMapping( value = "/{key}", method = RequestMethod.GET )
     public ResponseEntity<Response> getByKey( @PathVariable( "key" ) String key ){
@@ -68,6 +78,10 @@ public class PreferencesEndpoint{
         return new ResponseEntity<>( response, HttpStatus.OK );
     }
 
+    //endregion
+
+    //region PUT /account/preferences/{key}
+
     @RequestMapping( value = "/{key}", method = RequestMethod.PUT )
     public ResponseEntity<Response> putKey( @PathVariable( "key" ) String key, @RequestBody PreferenceValueCreateDTO dto ){
 
@@ -81,4 +95,6 @@ public class PreferencesEndpoint{
 
         return new ResponseEntity<>( response, HttpStatus.OK );
     }
+
+    //endregion
 }

@@ -10,6 +10,7 @@ public class UserUCLLCreateDTO{
     @NotBlank( message = "{NotBlank.UserUCLLCreateDTO.lastName}" )
     private String lastName;
 
+    // TODO Valid r-u-number annotation
     @NotBlank( message = "{NotBlank.UserUCLLCreateDTO.username}" )
     private String username;
 

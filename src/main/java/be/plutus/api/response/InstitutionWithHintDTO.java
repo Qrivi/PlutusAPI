@@ -1,26 +1,17 @@
 package be.plutus.api.response;
 
-public class InstitutionWithHintDTO{
+public class InstitutionWithHintDTO extends InstitutionDTO{
 
-    private String name;
-    private String slur;
+    private String hint;
 
     public InstitutionWithHintDTO(){
     }
 
-    public String getName(){
-        return name;
+    public String getHint(){
+        return hint;
     }
 
-    public void setName( String name ){
-        this.name = name;
-    }
-
-    public String getSlur(){
-        return slur;
-    }
-
-    public void setSlur( String slur ){
-        this.slur = slur;
+    public void setHint( String hint ){
+        this.hint = hint;
     }
 }
