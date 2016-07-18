@@ -3,13 +3,13 @@ package be.plutus.api.request;
 import be.plutus.api.validation.CorrectPassword;
 import org.hibernate.validator.constraints.NotBlank;
 
-public class UserRemoveDTO{
+public class UserAuthenticationDTO{
 
-    @NotBlank( message = "{NotBlank.UserRemoveDTO.password}" )
-    @CorrectPassword( message = "{CorrectPassword.UserRemoveDTO.password}" )
+    @NotBlank( message = "{NotBlank.UserAuthenticationDTO.password}" )
+    @CorrectPassword( message = "{CorrectPassword.UserAuthenticationDTO.password}" )
     private String password;
 
-    public UserRemoveDTO(){
+    public UserAuthenticationDTO(){
     }
 
     public String getPassword(){
