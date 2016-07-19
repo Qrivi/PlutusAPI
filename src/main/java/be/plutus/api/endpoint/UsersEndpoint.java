@@ -1,7 +1,7 @@
 package be.plutus.api.endpoint;
 
 import be.plutus.api.request.UserAuthenticationDTO;
-import be.plutus.api.request.UserUCLLCreateDTO;
+import be.plutus.api.request.UserCreateDTO;
 import be.plutus.api.request.UserUpdateDTO;
 import be.plutus.api.response.*;
 import be.plutus.api.security.context.SecurityContext;
@@ -105,10 +105,8 @@ public class UsersEndpoint{
 
     //region POST /account/users?institution=ucll
 
-    //TODO fix institution param
-    // this implementation beneath only works if param is url-encoded, not if json
-    @RequestMapping( /*params = { "institution=ucll" },*/ method = RequestMethod.POST )
-    public ResponseEntity<Response> post( @Valid @RequestBody UserUCLLCreateDTO dto, BindingResult result ){
+    @RequestMapping( method = RequestMethod.POST )
+    public ResponseEntity<Response> post( @Valid @RequestBody UserCreateDTO dto, BindingResult result ){
 
         if( result.hasErrors() )
             return EndpointUtils.createErrorResponse( result );
@@ -118,7 +116,7 @@ public class UsersEndpoint{
                 dto.getLastName(),
                 dto.getUsername(),
                 dto.getPassword(),
-                locationService.getInstitutionBySlur( "ucll" ) );
+                locationService.getInstitutionBySlur( dto.getInstitution() ) );
 
         Response response = new Response.Builder()
                 .created()
