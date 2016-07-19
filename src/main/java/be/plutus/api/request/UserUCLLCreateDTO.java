@@ -1,5 +1,6 @@
 package be.plutus.api.request;
 
+import be.plutus.api.validation.user.UCLL;
 import org.hibernate.validator.constraints.NotBlank;
 
 public class UserUCLLCreateDTO{
@@ -10,8 +11,8 @@ public class UserUCLLCreateDTO{
     @NotBlank( message = "{NotBlank.UserUCLLCreateDTO.lastName}" )
     private String lastName;
 
-    // TODO Valid r-u-number annotation
     @NotBlank( message = "{NotBlank.UserUCLLCreateDTO.username}" )
+    @UCLL( message = "{UCLL.UserUCLLCreateDTO.username}" )
     private String username;
 
     @NotBlank( message = "{NotBlank.UserUCLLCreateDTO.password}" )

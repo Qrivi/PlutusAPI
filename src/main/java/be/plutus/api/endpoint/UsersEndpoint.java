@@ -105,7 +105,9 @@ public class UsersEndpoint{
 
     //region POST /account/users?institution=ucll
 
-    @RequestMapping( params = { "institution=ucll" }, method = RequestMethod.POST )
+    //TODO fix institution param
+    // this implementation beneath only works if param is url-encoded, not if json
+    @RequestMapping( /*params = { "institution=ucll" },*/ method = RequestMethod.POST )
     public ResponseEntity<Response> post( @Valid @RequestBody UserUCLLCreateDTO dto, BindingResult result ){
 
         if( result.hasErrors() )
