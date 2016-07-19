@@ -14,7 +14,7 @@ public class CorrectPasswordValidator implements ConstraintValidator<CorrectPass
     AccountService accountService;
 
     @Override
-    public void initialize( CorrectPassword email ){
+    public void initialize( CorrectPassword password ){
     }
 
     @Override

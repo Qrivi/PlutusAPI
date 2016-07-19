@@ -10,8 +10,8 @@ public class SupportedCurrencyValidator implements ConstraintValidator<Supported
     private boolean optional;
 
     @Override
-    public void initialize( SupportedCurrency size ){
-        optional = size.optional();
+    public void initialize( SupportedCurrency currency ){
+        optional = currency.optional();
     }
 
     @Override

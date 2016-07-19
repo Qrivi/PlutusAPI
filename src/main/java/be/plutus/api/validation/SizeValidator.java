@@ -10,7 +10,6 @@ public class SizeValidator implements ConstraintValidator<Size, String>{
 
     @Override
     public void initialize( Size size ){
-
         optional = size.optional();
         min = size.min();
         max = size.max();
