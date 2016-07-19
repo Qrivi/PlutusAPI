@@ -25,7 +25,7 @@ import java.util.Date;
 public class TokenAuthenticationFilter extends GenericFilterBean{
 
     private static String PARAMETER_SECURITY_TOKEN = "token";
-    private static String HEADER_SECURITY_TOKEN = "X-SecurityContext-Token";
+    private static String HEADER_SECURITY_TOKEN = "X-Auth-Token";
 
     private TokenService tokenService;
     private ObjectMapper objectMapper;
