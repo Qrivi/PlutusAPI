@@ -1,4 +1,4 @@
-package be.plutus.api.validation.user;
+package be.plutus.api.validation;
 
 import javax.validation.Constraint;
 import javax.validation.Payload;
@@ -9,10 +9,12 @@ import java.lang.annotation.Target;
 
 @Target( {ElementType.FIELD} )
 @Retention( RetentionPolicy.RUNTIME )
-@Constraint( validatedBy = {UCLLValidator.class} )
-public @interface UCLL{
+@Constraint( validatedBy = {CorrectUsernameValidator.class} )
+public @interface CorrectUsername{
 
-    String message() default "{be.plutus.api.validation.user.UCLL.message}";
+    String message() default "{be.plutus.api.validation.CorrectUsername.message}";
+
+    String institution() default "";
 
     Class<?>[] groups() default {};
 
