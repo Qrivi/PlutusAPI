@@ -1,5 +1,6 @@
 package be.plutus.api.validation;
 
+import be.plutus.api.security.context.SecurityContext;
 import be.plutus.core.model.account.Account;
 import be.plutus.core.service.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,9 +20,7 @@ public class CorrectPasswordValidator implements ConstraintValidator<CorrectPass
 
     @Override
     public boolean isValid( String value, ConstraintValidatorContext context ){
-
-        Account account = accountService.getAccount( (Integer)SecurityContextHolder.getContext().getAuthentication().getPrincipal() );
-
+        Account account = accountService.getAccount( SecurityContext.getAccount().getId() );
         return account.isPasswordValid( value );
     }
 }

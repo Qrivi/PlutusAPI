@@ -1,5 +1,6 @@
 package be.plutus.api.endpoint;
 
+import be.plutus.api.config.Config;
 import be.plutus.api.request.UserAuthenticationDTO;
 import be.plutus.api.request.UserCreateDTO;
 import be.plutus.api.request.UserUCLLCreateDTO;
@@ -11,7 +12,9 @@ import be.plutus.core.model.account.Credit;
 import be.plutus.core.model.account.User;
 import be.plutus.core.model.currency.Currency;
 import be.plutus.core.model.currency.CurrencyConverter;
+import be.plutus.core.model.location.Campus;
 import be.plutus.core.model.location.Institution;
+import be.plutus.core.model.location.Location;
 import be.plutus.core.model.transaction.Transaction;
 import be.plutus.core.model.transaction.TransactionType;
 import be.plutus.core.service.AccountService;
@@ -26,6 +29,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RestController
@@ -235,12 +239,13 @@ public class UsersEndpoint{
         User user = users.get( index );
         Credit credit = user.getCredit();
 
-        Currency currency = Currency.getFromName( currencyName );
+        Currency currency = Currency.getFromAbbreviation( currencyName );
 
         if (currency == null)
             currency = account.getDefaultCurrency();
 
         CreditDTO dto = new CreditDTO();
+        // TODO: round the amount to 2 digits after komma
         dto.setAmount( CurrencyConverter.convert( credit.getAmount(), credit.getCurrency(), currency ) );
 
         Response response = new Response.Builder()
@@ -261,8 +266,8 @@ public class UsersEndpoint{
     @RequestMapping( value = "/{index}/transactions" ,method = RequestMethod.GET )
     public ResponseEntity<Response> getTransactionsByIndex( @PathVariable( "index" ) int index,
                                                             @RequestParam( name = "currency", required = false ) String currencyName,
-                                                            @RequestParam( name = "limit", required = false ) int limit,
-                                                            @RequestParam( name = "limit", required = false ) int offset,
+                                                            @RequestParam( name = "limit", required = false ) Integer limit,
+                                                            @RequestParam( name = "offset", required = false ) Integer offset,
                                                             @RequestParam( name = "type", required = false ) String typeName ){
 
         Account account = accountService.getAccount( SecurityContext.getAccount().getId() );
@@ -273,10 +278,17 @@ public class UsersEndpoint{
 
         User user = users.get( index );
 
-        Currency currency = Currency.getFromName( currencyName );
-        currency = (currency == null) ? account.getDefaultCurrency() : currency;
+        Currency currency = Optional
+                .ofNullable( Currency.getFromAbbreviation( currencyName ) )
+                .orElse( account.getDefaultCurrency() );
+        limit = Optional
+                .ofNullable( limit )
+                .orElse( Config.DEFAULT_TRANSACTION_LIMIT );
+        offset = Optional
+                .ofNullable( offset )
+                .orElse( Config.DEFAULT_TRANSACTION_OFFSET );
 
-        TransactionType type = TransactionType.getFromType( typeName );
+        TransactionType type = TransactionType.getFromAbbreviation( typeName );
 
         List<Transaction> transactions;
 
@@ -285,17 +297,40 @@ public class UsersEndpoint{
         else
             transactions = transactionService.getTransactionByUserAndType( user.getId(), type, limit, offset );
 
-        Currency finalCurrency = currency;
         List<TransactionDTO> transactionDTOs = transactions
                 .stream()
                 .map( transaction -> {
+                    Location location = transaction.getLocation();
+                    Campus campus = location.getCampus();
+                    Institution institution = campus.getInstitution();
+
+                    InstitutionDTO institutionDTO = new InstitutionDTO();
+                    institutionDTO.setName( institution.getName() );
+                    institutionDTO.setSlur( institution.getSlur() );
+
+                    CampusDTO campusDTO = new CampusDTO();
+                    campusDTO.setAddress( campus.getAddress() );
+                    campusDTO.setCity( campus.getCity() );
+                    campusDTO.setCountry( campus.getCountry() );
+                    campusDTO.setInstitution( institutionDTO );
+                    campusDTO.setLat( campus.getLat() );
+                    campusDTO.setLng( campus.getLng() );
+                    campusDTO.setName( campus.getName() );
+                    campusDTO.setZip( campus.getZip() );
+
+                    LocationDTO locationDTO = new LocationDTO();
+                    locationDTO.setName( location.getName() );
+                    locationDTO.setLng( location.getLng() );
+                    locationDTO.setLat( location.getLat() );
+                    locationDTO.setCampus( campusDTO );
+
                     TransactionDTO dto = new TransactionDTO();
                     dto.setId( transaction.getId() );
-                    dto.setAmount( CurrencyConverter.convert( transaction.getAmount(), transaction.getCurrency(), finalCurrency ) );
+                    dto.setAmount( CurrencyConverter.convert( transaction.getAmount(), transaction.getCurrency(), currency ) );
                     dto.setTitle( transaction.getTitle() );
                     dto.setDescription( transaction.getDescription() );
                     dto.setType( transaction.getType() );
-                    dto.setLocation( transaction.getLocation() );
+                    dto.setLocation( locationDTO );
                     dto.setTimestamp( transaction.getTimestamp() );
                     return dto;
         } ).collect( Collectors.toList() );
@@ -327,7 +362,7 @@ public class UsersEndpoint{
 
         User user = users.get( index );
 
-        Currency currency = Currency.getFromName( currencyName );
+        Currency currency = Currency.getFromAbbreviation( currencyName );
         currency = (currency == null) ? account.getDefaultCurrency() : currency;
 
         Transaction transaction = transactionService.getTransaction( id );
@@ -335,13 +370,37 @@ public class UsersEndpoint{
         if( transaction.getUser().getId() != user.getId() )
             return new ResponseEntity<>( new Response.Builder().notFound().build(), HttpStatus.NOT_FOUND );
 
+        Location location = transaction.getLocation();
+        Campus campus = location.getCampus();
+        Institution institution = campus.getInstitution();
+
+        InstitutionDTO institutionDTO = new InstitutionDTO();
+        institutionDTO.setName( institution.getName() );
+        institutionDTO.setSlur( institution.getSlur() );
+
+        CampusDTO campusDTO = new CampusDTO();
+        campusDTO.setAddress( campus.getAddress() );
+        campusDTO.setCity( campus.getCity() );
+        campusDTO.setCountry( campus.getCountry() );
+        campusDTO.setInstitution( institutionDTO );
+        campusDTO.setLat( campus.getLat() );
+        campusDTO.setLng( campus.getLng() );
+        campusDTO.setName( campus.getName() );
+        campusDTO.setZip( campus.getZip() );
+
+        LocationDTO locationDTO = new LocationDTO();
+        locationDTO.setName( location.getName() );
+        locationDTO.setLng( location.getLng() );
+        locationDTO.setLat( location.getLat() );
+        locationDTO.setCampus( campusDTO );
+
         TransactionDTO dto = new TransactionDTO();
         dto.setId( transaction.getId() );
         dto.setAmount( CurrencyConverter.convert( transaction.getAmount(), transaction.getCurrency(), currency ) );
         dto.setTitle( transaction.getTitle() );
         dto.setDescription( transaction.getDescription() );
         dto.setType( transaction.getType() );
-        dto.setLocation( transaction.getLocation() );
+        dto.setLocation( locationDTO );
         dto.setTimestamp( transaction.getTimestamp() );
 
         Response response = new Response.Builder()

@@ -14,7 +14,7 @@ public class TransactionDTO{
     private double amount;
     private TransactionType type;
     private Date timestamp;
-    private Location location;
+    private LocationDTO location;
 
     public TransactionDTO(){
     }
@@ -72,11 +72,11 @@ public class TransactionDTO{
         this.timestamp = timestamp;
     }
 
-    public Location getLocation(){
+    public LocationDTO getLocation(){
         return location;
     }
 
-    public void setLocation( Location location ){
+    public void setLocation( LocationDTO location ){
         this.location = location;
     }
 }
