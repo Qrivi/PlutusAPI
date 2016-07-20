@@ -1,5 +1,6 @@
 package be.plutus.api.endpoint;
 
+import be.plutus.api.converter.Converter;
 import be.plutus.api.security.context.SecurityContext;
 import be.plutus.api.response.RequestDTO;
 import be.plutus.api.response.Response;
@@ -113,27 +114,15 @@ public class SessionsEndpoint{
     private List<SessionDTO> getSessions(){
         final int[] index = {0};
         return tokenService.getTokensFromAccount( SecurityContext.getAccount().getId() )
-                .stream().map( token -> {
-                    SessionDTO dto = new SessionDTO();
-                    dto.setIndex( index[0]++ );
-                    dto.setApplication( token.getApplicationName() );
-                    dto.setDevice( token.getDeviceName() );
-                    dto.setIp( token.getRequestIp() );
-                    dto.setCreated( token.getCreationDate() );
-                    dto.setExpires( token.getExpiryDate() );
-                    return dto;
-                } ).collect( Collectors.toList() );
+                .stream()
+                .map( token -> Converter.convert( token, index[0]++ ) )
+                .collect( Collectors.toList() );
     }
 
     private List<RequestDTO> getRequestsFromToken( int id ){
         return tokenService.getRequestsFromToken( id )
-                .stream().map( request -> {
-                    RequestDTO dto = new RequestDTO();
-                    dto.setMethod( request.getMethod() );
-                    dto.setEndpoint( request.getEndpoint() );
-                    dto.setIp( request.getIp() );
-                    dto.setTimestamp( request.getTimestamp() );
-                    return dto;
-                } ).collect( Collectors.toList() );
+                .stream()
+                .map( Converter::convert )
+                .collect( Collectors.toList() );
     }
 }

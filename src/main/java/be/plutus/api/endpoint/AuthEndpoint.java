@@ -1,5 +1,6 @@
 package be.plutus.api.endpoint;
 
+import be.plutus.api.converter.Converter;
 import be.plutus.api.request.AuthenticationDTO;
 import be.plutus.api.response.Response;
 import be.plutus.api.response.TokenDTO;
@@ -70,13 +71,7 @@ public class AuthEndpoint{
 
         Token token = tokenService.createToken( account, dto.getApplication(), dto.getDevice(), request.getRemoteAddr() );
 
-        TokenDTO tokenDTO = new TokenDTO();
-        tokenDTO.setToken( token.getToken() );
-        tokenDTO.setApplication( token.getApplicationName() );
-        tokenDTO.setDevice( token.getDeviceName() );
-        tokenDTO.setExpires( token.getExpiryDate() );
-
-        response.data( tokenDTO );
+        response.data( Converter.convert( token ) );
         response.success();
 
         return new ResponseEntity<>( response.build(), HttpStatus.OK );

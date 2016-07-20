@@ -1,6 +1,7 @@
 package be.plutus.api.endpoint;
 
 import be.plutus.api.config.Config;
+import be.plutus.api.converter.Converter;
 import be.plutus.api.request.UserAuthenticationDTO;
 import be.plutus.api.request.UserCreateDTO;
 import be.plutus.api.request.UserUCLLCreateDTO;
@@ -29,6 +30,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -58,25 +60,8 @@ public class UsersEndpoint{
         final int[] index = {0};
         List<UserDTO> users = account.getUsers()
                 .stream()
-                .map( user -> {
-                    Institution institution = user.getInstitution();
-
-                    InstitutionDTO institutionDTO = new InstitutionDTO();
-                    institutionDTO.setName( institution.getName() );
-                    institutionDTO.setSlur( institution.getSlur() );
-
-                    UserDTO dto = new UserDTO();
-                    dto.setIndex( index[0]++ );
-                    dto.setUsername( user.getUsername() );
-                    dto.setFirstName( user.getFirstName() );
-                    dto.setLastName( user.getLastName() );
-                    dto.setInstitution( institutionDTO );
-                    dto.setCreated( user.getCreationDate() );
-                    dto.setUpdated( user.getFetchDate() );
-
-                    return dto;
-                } ).collect( Collectors.toList() );
-
+                .map( user -> Converter.convert( user, index[0]++ ))
+                .collect( Collectors.toList() );
 
         Response response = new Response.Builder()
                 .account( account )
@@ -145,24 +130,9 @@ public class UsersEndpoint{
 
         User user = users.get( index );
 
-        Institution institution = user.getInstitution();
-
-        InstitutionDTO institutionDTO = new InstitutionDTO();
-        institutionDTO.setName( institution.getName() );
-        institutionDTO.setSlur( institution.getSlur() );
-
-        UserDTO dto = new UserDTO();
-        dto.setIndex( index );
-        dto.setUsername( user.getUsername() );
-        dto.setFirstName( user.getFirstName() );
-        dto.setLastName( user.getLastName() );
-        dto.setInstitution( institutionDTO );
-        dto.setCreated( user.getCreationDate() );
-        dto.setUpdated( user.getFetchDate() );
-
         Response response = new Response.Builder()
                 .account( account )
-                .data( dto )
+                .data( Converter.convert( user, index ) )
                 .success()
                 .build();
 
@@ -299,45 +269,13 @@ public class UsersEndpoint{
 
         List<TransactionDTO> transactionDTOs = transactions
                 .stream()
-                .map( transaction -> {
-                    Location location = transaction.getLocation();
-                    Campus campus = location.getCampus();
-                    Institution institution = campus.getInstitution();
-
-                    InstitutionDTO institutionDTO = new InstitutionDTO();
-                    institutionDTO.setName( institution.getName() );
-                    institutionDTO.setSlur( institution.getSlur() );
-
-                    CampusDTO campusDTO = new CampusDTO();
-                    campusDTO.setAddress( campus.getAddress() );
-                    campusDTO.setCity( campus.getCity() );
-                    campusDTO.setCountry( campus.getCountry() );
-                    campusDTO.setInstitution( institutionDTO );
-                    campusDTO.setLat( campus.getLat() );
-                    campusDTO.setLng( campus.getLng() );
-                    campusDTO.setName( campus.getName() );
-                    campusDTO.setZip( campus.getZip() );
-
-                    LocationDTO locationDTO = new LocationDTO();
-                    locationDTO.setName( location.getName() );
-                    locationDTO.setLng( location.getLng() );
-                    locationDTO.setLat( location.getLat() );
-                    locationDTO.setCampus( campusDTO );
-
-                    TransactionDTO dto = new TransactionDTO();
-                    dto.setId( transaction.getId() );
-                    dto.setAmount( CurrencyConverter.convert( transaction.getAmount(), transaction.getCurrency(), currency ) );
-                    dto.setTitle( transaction.getTitle() );
-                    dto.setDescription( transaction.getDescription() );
-                    dto.setType( transaction.getType() );
-                    dto.setLocation( locationDTO );
-                    dto.setTimestamp( transaction.getTimestamp() );
-                    return dto;
-        } ).collect( Collectors.toList() );
+                .map( transaction -> Converter.convert(transaction, currency) )
+                .collect( Collectors.toList() );
 
         Response response = new Response.Builder()
                 .account( account )
                 .currency( currency )
+                .user( user )
                 .data( transactionDTOs )
                 .success()
                 .build();
@@ -367,46 +305,14 @@ public class UsersEndpoint{
 
         Transaction transaction = transactionService.getTransaction( id );
 
-        if( transaction.getUser().getId() != user.getId() )
+        if( !Objects.equals( transaction.getUser().getId(), user.getId() ) )
             return new ResponseEntity<>( new Response.Builder().notFound().build(), HttpStatus.NOT_FOUND );
-
-        Location location = transaction.getLocation();
-        Campus campus = location.getCampus();
-        Institution institution = campus.getInstitution();
-
-        InstitutionDTO institutionDTO = new InstitutionDTO();
-        institutionDTO.setName( institution.getName() );
-        institutionDTO.setSlur( institution.getSlur() );
-
-        CampusDTO campusDTO = new CampusDTO();
-        campusDTO.setAddress( campus.getAddress() );
-        campusDTO.setCity( campus.getCity() );
-        campusDTO.setCountry( campus.getCountry() );
-        campusDTO.setInstitution( institutionDTO );
-        campusDTO.setLat( campus.getLat() );
-        campusDTO.setLng( campus.getLng() );
-        campusDTO.setName( campus.getName() );
-        campusDTO.setZip( campus.getZip() );
-
-        LocationDTO locationDTO = new LocationDTO();
-        locationDTO.setName( location.getName() );
-        locationDTO.setLng( location.getLng() );
-        locationDTO.setLat( location.getLat() );
-        locationDTO.setCampus( campusDTO );
-
-        TransactionDTO dto = new TransactionDTO();
-        dto.setId( transaction.getId() );
-        dto.setAmount( CurrencyConverter.convert( transaction.getAmount(), transaction.getCurrency(), currency ) );
-        dto.setTitle( transaction.getTitle() );
-        dto.setDescription( transaction.getDescription() );
-        dto.setType( transaction.getType() );
-        dto.setLocation( locationDTO );
-        dto.setTimestamp( transaction.getTimestamp() );
 
         Response response = new Response.Builder()
                 .account( account )
                 .currency( currency )
-                .data( dto )
+                .user( user )
+                .data( Converter.convert( transaction, currency ) )
                 .success()
                 .build();
 

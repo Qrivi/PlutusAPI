@@ -1,5 +1,6 @@
 package be.plutus.api.endpoint;
 
+import be.plutus.api.converter.Converter;
 import be.plutus.api.response.InstitutionDTO;
 import be.plutus.api.response.InstitutionWithHintDTO;
 import be.plutus.api.response.Response;
@@ -32,13 +33,8 @@ public class InstitutionsEndpoint{
 
         List<InstitutionDTO> institutions = locationService.getAllInstitutions()
                 .stream()
-                .map( institution -> {
-                    InstitutionWithHintDTO dto = new InstitutionWithHintDTO();
-                    dto.setName( institution.getName() );
-                    dto.setSlur( institution.getSlur() );
-                    dto.setHint( institution.getHint() );
-                    return dto;
-                } ).collect( Collectors.toList() );
+                .map( Converter::convert )
+                .collect( Collectors.toList() );
 
         Response response = new Response.Builder()
                 .data( institutions )

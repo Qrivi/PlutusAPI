@@ -1,5 +1,6 @@
 package be.plutus.api.endpoint;
 
+import be.plutus.api.converter.Converter;
 import be.plutus.api.request.AccountCreateDTO;
 import be.plutus.api.request.AccountRemoveDTO;
 import be.plutus.api.request.AccountUpdateDTO;
@@ -37,13 +38,8 @@ public class AccountEndpoint{
 
         Account account = accountService.getAccount( SecurityContext.getAccount().getId() );
 
-        AccountDTO dto = new AccountDTO();
-        dto.setEmail( account.getEmail() );
-        dto.setCurrency( account.getDefaultCurrency() );
-        dto.setCreated( account.getCreationDate() );
-
         Response response = new Response.Builder()
-                .data( dto )
+                .data( Converter.convert( account ) )
                 .success()
                 .build();
 

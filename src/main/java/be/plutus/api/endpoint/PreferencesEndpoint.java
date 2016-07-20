@@ -1,9 +1,9 @@
 package be.plutus.api.endpoint;
 
-import be.plutus.api.security.context.SecurityContext;
 import be.plutus.api.request.PreferenceCreateDTO;
 import be.plutus.api.request.PreferenceValueCreateDTO;
 import be.plutus.api.response.Response;
+import be.plutus.api.security.context.SecurityContext;
 import be.plutus.core.model.preferences.Preferences;
 import be.plutus.core.service.PreferencesService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,7 +33,7 @@ public class PreferencesEndpoint{
         Preferences preferences = preferencesService.getPreferenceFromAccount( SecurityContext.getAccount().getId() );
 
         Response response = new Response.Builder()
-                .data(  preferences.toMap() )
+                .data( preferences.toMap() )
                 .success()
                 .build();
 
@@ -67,11 +67,8 @@ public class PreferencesEndpoint{
 
         Preferences preferences = preferencesService.getPreferenceFromAccount( SecurityContext.getAccount().getId() );
 
-        Map<String, String> preference = new HashMap<>();
-        preference.put( key, preferences.get( key ) );
-
         Response response = new Response.Builder()
-                .data( preference )
+                .data( new HashMap<String, String>(){{ put( key, preferences.get( key ) ); }} )
                 .success()
                 .build();
 
