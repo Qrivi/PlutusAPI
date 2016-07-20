@@ -1,10 +1,9 @@
 package be.plutus.api.endpoint;
 
-import be.plutus.api.converter.Converter;
+import be.plutus.api.util.Converter;
 import be.plutus.api.request.AccountCreateDTO;
 import be.plutus.api.request.AccountRemoveDTO;
 import be.plutus.api.request.AccountUpdateDTO;
-import be.plutus.api.response.AccountDTO;
 import be.plutus.api.response.Response;
 import be.plutus.api.security.context.SecurityContext;
 import be.plutus.core.model.account.Account;

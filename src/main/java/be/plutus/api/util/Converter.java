@@ -1,7 +1,8 @@
-package be.plutus.api.converter;
+package be.plutus.api.util;
 
 import be.plutus.api.response.*;
 import be.plutus.core.model.account.Account;
+import be.plutus.core.model.account.Credit;
 import be.plutus.core.model.account.User;
 import be.plutus.core.model.currency.Currency;
 import be.plutus.core.model.currency.CurrencyConverter;
@@ -74,6 +75,12 @@ public class Converter{
         dto.setEndpoint( request.getEndpoint() );
         dto.setIp( request.getIp() );
         dto.setTimestamp( request.getTimestamp() );
+        return dto;
+    }
+
+    public static CreditDTO convert( Credit credit, Currency toCurrency ){
+        CreditDTO dto = new CreditDTO();
+        dto.setAmount( CurrencyConverter.convert( credit.getAmount(), credit.getCurrency(), toCurrency ) );
         return dto;
     }
 

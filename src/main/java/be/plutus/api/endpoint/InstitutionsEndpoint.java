@@ -1,8 +1,7 @@
 package be.plutus.api.endpoint;
 
-import be.plutus.api.converter.Converter;
+import be.plutus.api.util.Converter;
 import be.plutus.api.response.InstitutionDTO;
-import be.plutus.api.response.InstitutionWithHintDTO;
 import be.plutus.api.response.Response;
 import be.plutus.core.service.LocationService;
 import org.springframework.beans.factory.annotation.Autowired;

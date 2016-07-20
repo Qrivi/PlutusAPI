@@ -1,6 +1,6 @@
 package be.plutus.api.endpoint;
 
-import be.plutus.api.converter.Converter;
+import be.plutus.api.util.Converter;
 import be.plutus.api.security.context.SecurityContext;
 import be.plutus.api.response.RequestDTO;
 import be.plutus.api.response.Response;

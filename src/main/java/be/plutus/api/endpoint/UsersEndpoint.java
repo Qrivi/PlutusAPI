@@ -1,9 +1,8 @@
 package be.plutus.api.endpoint;
 
 import be.plutus.api.config.Config;
-import be.plutus.api.converter.Converter;
+import be.plutus.api.util.Converter;
 import be.plutus.api.request.UserAuthenticationDTO;
-import be.plutus.api.request.UserCreateDTO;
 import be.plutus.api.request.UserUCLLCreateDTO;
 import be.plutus.api.request.UserUpdateDTO;
 import be.plutus.api.response.*;
@@ -13,9 +12,6 @@ import be.plutus.core.model.account.Credit;
 import be.plutus.core.model.account.User;
 import be.plutus.core.model.currency.Currency;
 import be.plutus.core.model.currency.CurrencyConverter;
-import be.plutus.core.model.location.Campus;
-import be.plutus.core.model.location.Institution;
-import be.plutus.core.model.location.Location;
 import be.plutus.core.model.transaction.Transaction;
 import be.plutus.core.model.transaction.TransactionType;
 import be.plutus.core.service.AccountService;
@@ -214,15 +210,11 @@ public class UsersEndpoint{
         if (currency == null)
             currency = account.getDefaultCurrency();
 
-        CreditDTO dto = new CreditDTO();
-        // TODO: round the amount to 2 digits after komma
-        dto.setAmount( CurrencyConverter.convert( credit.getAmount(), credit.getCurrency(), currency ) );
-
         Response response = new Response.Builder()
                 .account( account )
                 .user( user )
                 .currency( currency )
-                .data( dto )
+                .data( Converter.convert( credit, currency ) )
                 .success()
                 .build();
 
