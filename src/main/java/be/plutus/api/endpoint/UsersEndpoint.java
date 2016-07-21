@@ -108,7 +108,7 @@ public class UsersEndpoint{
                 .created()
                 .build();
 
-        return new ResponseEntity<>( response, HttpStatus.OK );
+        return new ResponseEntity<>( response, HttpStatus.CREATED );
     }
 
     //endregion
@@ -119,12 +119,10 @@ public class UsersEndpoint{
     public ResponseEntity<Response> getByIndex( @PathVariable( "index" ) int index ){
 
         Account account = accountService.getAccount( SecurityContext.getAccount().getId() );
-        List<User> users = account.getUsers();
+        User user = ( index < 0 || index > account.getUsers().size() - 1 ) ? null : account.getUsers().get( index );
 
-        if( index < 0 || index > users.size() - 1 )
+        if( user == null )
             return new ResponseEntity<>( new Response.Builder().notFound().build(), HttpStatus.NOT_FOUND );
-
-        User user = users.get( index );
 
         Response response = new Response.Builder()
                 .account( account )
@@ -146,12 +144,10 @@ public class UsersEndpoint{
             return EndpointUtils.createErrorResponse( result );
 
         Account account = accountService.getAccount( SecurityContext.getAccount().getId() );
-        List<User> users = account.getUsers();
+        User user = ( index < 0 || index > account.getUsers().size() - 1 ) ? null : account.getUsers().get( index );
 
-        if( index < 0 || index > users.size() - 1 )
+        if( user == null )
             return new ResponseEntity<>( new Response.Builder().notFound().build(), HttpStatus.NOT_FOUND );
-
-        User user = users.get( index );
 
         accountService.updateUser( user.getId(), dto.getNewPassword() );
 
@@ -173,12 +169,10 @@ public class UsersEndpoint{
             return EndpointUtils.createErrorResponse( result );
 
         Account account = accountService.getAccount( SecurityContext.getAccount().getId() );
-        List<User> users = account.getUsers();
+        User user = ( index < 0 || index > account.getUsers().size() - 1 ) ? null : account.getUsers().get( index );
 
-        if( index < 0 || index > users.size() - 1 )
+        if( user == null )
             return new ResponseEntity<>( new Response.Builder().notFound().build(), HttpStatus.NOT_FOUND );
-
-        User user = users.get( index );
 
         accountService.resetTransactionsFromUser( user.getId() );
 
@@ -194,21 +188,17 @@ public class UsersEndpoint{
     //region GET /account/users/{index}/credit
 
     @RequestMapping( value = "/{index}/credit" ,method = RequestMethod.GET )
-    public ResponseEntity<Response> getCreditByIndex( @PathVariable( "index" ) int index , @RequestParam( name = "currency", required = false ) String currencyName ){
+    public ResponseEntity<Response> getCreditByIndex( @PathVariable( "index" ) int index , @RequestParam( name = "currency", required = false ) String currencyParam ){
 
         Account account = accountService.getAccount( SecurityContext.getAccount().getId() );
-        List<User> users = account.getUsers();
+        User user = ( index < 0 || index > account.getUsers().size() - 1 ) ? null : account.getUsers().get( index );
 
-        if( index < 0 || index > users.size() - 1 )
+        if( user == null )
             return new ResponseEntity<>( new Response.Builder().notFound().build(), HttpStatus.NOT_FOUND );
 
-        User user = users.get( index );
         Credit credit = user.getCredit();
-
-        Currency currency = Currency.getFromAbbreviation( currencyName );
-
-        if (currency == null)
-            currency = account.getDefaultCurrency();
+        Currency currency = Optional.ofNullable( Currency.getFromAbbreviation( currencyParam ) )
+                .orElse( account.getDefaultCurrency() );
 
         Response response = new Response.Builder()
                 .account( account )
@@ -227,30 +217,27 @@ public class UsersEndpoint{
 
     @RequestMapping( value = "/{index}/transactions" ,method = RequestMethod.GET )
     public ResponseEntity<Response> getTransactionsByIndex( @PathVariable( "index" ) int index,
-                                                            @RequestParam( name = "currency", required = false ) String currencyName,
-                                                            @RequestParam( name = "limit", required = false ) Integer limit,
-                                                            @RequestParam( name = "offset", required = false ) Integer offset,
-                                                            @RequestParam( name = "type", required = false ) String typeName ){
+                                                            @RequestParam( name = "currency", required = false ) String currencyParam,
+                                                            @RequestParam( name = "limit", required = false ) Integer limitParam,
+                                                            @RequestParam( name = "offset", required = false ) Integer offsetParam,
+                                                            @RequestParam( name = "type", required = false ) String typeParam ){
 
         Account account = accountService.getAccount( SecurityContext.getAccount().getId() );
-        List<User> users = account.getUsers();
+        User user = ( index < 0 || index > account.getUsers().size() - 1 ) ? null : account.getUsers().get( index );
 
-        if( index < 0 || index > users.size() - 1 )
+        if( user == null )
             return new ResponseEntity<>( new Response.Builder().notFound().build(), HttpStatus.NOT_FOUND );
 
-        User user = users.get( index );
-
-        Currency currency = Optional
-                .ofNullable( Currency.getFromAbbreviation( currencyName ) )
+        Currency currency = Optional.ofNullable( Currency.getFromAbbreviation( currencyParam ) )
                 .orElse( account.getDefaultCurrency() );
-        limit = Optional
-                .ofNullable( limit )
+
+        int limit = Optional.ofNullable( limitParam )
                 .orElse( Config.DEFAULT_TRANSACTION_LIMIT );
-        offset = Optional
-                .ofNullable( offset )
+
+        int offset = Optional.ofNullable( offsetParam )
                 .orElse( Config.DEFAULT_TRANSACTION_OFFSET );
 
-        TransactionType type = TransactionType.getFromAbbreviation( typeName );
+        TransactionType type = TransactionType.getFromAbbreviation( typeParam );
 
         List<Transaction> transactions;
 
@@ -282,18 +269,16 @@ public class UsersEndpoint{
     @RequestMapping( value = "/{index}/transactions/{id}" ,method = RequestMethod.GET )
     public ResponseEntity<Response> getTransactionsByIndex( @PathVariable( "index" ) int index,
                                                             @PathVariable( "id" ) int id,
-                                                            @RequestParam( name = "currency", required = false ) String currencyName ){
+                                                            @RequestParam( name = "currency", required = false ) String currencyParam ){
 
         Account account = accountService.getAccount( SecurityContext.getAccount().getId() );
-        List<User> users = account.getUsers();
+        User user = ( index < 0 || index > account.getUsers().size() - 1 ) ? null : account.getUsers().get( index );
 
-        if( index < 0 || index > users.size() - 1 )
+        if( user == null )
             return new ResponseEntity<>( new Response.Builder().notFound().build(), HttpStatus.NOT_FOUND );
 
-        User user = users.get( index );
-
-        Currency currency = Currency.getFromAbbreviation( currencyName );
-        currency = (currency == null) ? account.getDefaultCurrency() : currency;
+        Currency currency = Optional.ofNullable( Currency.getFromAbbreviation( currencyParam ) )
+                .orElse( account.getDefaultCurrency() );
 
         Transaction transaction = transactionService.getTransaction( id );
 

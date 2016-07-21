@@ -99,7 +99,7 @@ public class SessionsEndpoint{
         if( index < 0 || index > tokens.size() - 1 )
             return new ResponseEntity<>( new Response.Builder().notFound().build(), HttpStatus.NOT_FOUND );
 
-        List<RequestDTO> requests =  getRequestsFromToken( tokens.get( index ).getId() );
+        List<RequestDTO> requests = getRequestsFromToken( tokens.get( index ).getId() );
 
         Response response = new Response.Builder()
                 .data( requests )

@@ -55,7 +55,7 @@ public class PreferencesEndpoint{
                 .created()
                 .build();
 
-        return new ResponseEntity<>( response, HttpStatus.OK );
+        return new ResponseEntity<>( response, HttpStatus.CREATED );
     }
 
     //endregion
