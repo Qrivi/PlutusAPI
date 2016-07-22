@@ -10,6 +10,7 @@ import java.util.Date;
 @JsonPropertyOrder( {
         "user",
         "updated",
+        "updatedISO8601",
         "account",
         "currency",
         "responseStatusCode",
@@ -42,6 +43,11 @@ public class Meta{
     }
 
     public Date getUpdated(){
+        return updated;
+    }
+
+    @JsonFormat( pattern = "yyyy-MM-dd'T'HH:mm:ssZ" )
+    public Date getUpdatedISO8601(){
         return updated;
     }
 
