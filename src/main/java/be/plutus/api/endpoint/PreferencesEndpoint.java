@@ -1,7 +1,7 @@
 package be.plutus.api.endpoint;
 
-import be.plutus.api.request.PreferenceCreateDTO;
-import be.plutus.api.request.PreferenceValueCreateDTO;
+import be.plutus.api.dto.request.PreferenceCreateDTO;
+import be.plutus.api.dto.request.PreferenceValueCreateDTO;
 import be.plutus.api.response.Response;
 import be.plutus.api.security.context.SecurityContext;
 import be.plutus.core.model.preferences.Preferences;

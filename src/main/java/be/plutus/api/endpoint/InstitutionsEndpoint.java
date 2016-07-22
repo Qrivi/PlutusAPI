@@ -1,8 +1,8 @@
 package be.plutus.api.endpoint;
 
-import be.plutus.api.response.InstitutionDTO;
+import be.plutus.api.dto.response.InstitutionDTO;
 import be.plutus.api.response.Response;
-import be.plutus.api.util.Converter;
+import be.plutus.api.utils.Converter;
 import be.plutus.core.service.LocationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

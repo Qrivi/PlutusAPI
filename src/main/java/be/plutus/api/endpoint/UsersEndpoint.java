@@ -1,14 +1,15 @@
 package be.plutus.api.endpoint;
 
 import be.plutus.api.config.Config;
-import be.plutus.api.request.UserAuthenticationDTO;
-import be.plutus.api.request.UserUCLLCreateDTO;
-import be.plutus.api.request.UserUpdateDTO;
+import be.plutus.api.endpoint.utils.EndpointUtils;
+import be.plutus.api.dto.request.UserAuthenticationDTO;
+import be.plutus.api.dto.request.UserUCLLCreateDTO;
+import be.plutus.api.dto.request.UserUpdateDTO;
 import be.plutus.api.response.Response;
-import be.plutus.api.response.TransactionDTO;
-import be.plutus.api.response.UserDTO;
+import be.plutus.api.dto.response.TransactionDTO;
+import be.plutus.api.dto.response.UserDTO;
 import be.plutus.api.security.context.SecurityContext;
-import be.plutus.api.util.Converter;
+import be.plutus.api.utils.Converter;
 import be.plutus.core.model.account.Account;
 import be.plutus.core.model.account.Credit;
 import be.plutus.core.model.account.User;

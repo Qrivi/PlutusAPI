@@ -1,4 +1,4 @@
-package be.plutus.api.endpoint;
+package be.plutus.api.endpoint.utils;
 
 import be.plutus.api.response.Response;
 import org.springframework.context.support.DefaultMessageSourceResolvable;

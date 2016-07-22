@@ -1,4 +1,4 @@
-package be.plutus.api.util;
+package be.plutus.api.utils;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;

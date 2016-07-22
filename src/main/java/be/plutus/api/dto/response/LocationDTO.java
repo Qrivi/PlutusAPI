@@ -1,4 +1,4 @@
-package be.plutus.api.response;
+package be.plutus.api.dto.response;
 
 public class LocationDTO{
 

@@ -1,4 +1,4 @@
-package be.plutus.api.request;
+package be.plutus.api.dto.request;
 
 import be.plutus.api.validation.AvailableEmail;
 import be.plutus.api.validation.SupportedCurrency;

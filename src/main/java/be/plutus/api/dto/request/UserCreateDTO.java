@@ -1,4 +1,4 @@
-package be.plutus.api.request;
+package be.plutus.api.dto.request;
 
 import org.hibernate.validator.constraints.NotBlank;
 

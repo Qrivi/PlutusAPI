@@ -1,6 +1,6 @@
-package be.plutus.api.util;
+package be.plutus.api.utils;
 
-import be.plutus.api.response.*;
+import be.plutus.api.dto.response.*;
 import be.plutus.core.model.account.Account;
 import be.plutus.core.model.account.Credit;
 import be.plutus.core.model.account.User;
