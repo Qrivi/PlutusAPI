@@ -4,7 +4,6 @@ import be.plutus.api.security.context.SecurityContext;
 import be.plutus.core.model.account.Account;
 import be.plutus.core.service.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.context.SecurityContextHolder;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;

@@ -1,6 +1,5 @@
 package be.plutus.api.response;
 
-import be.plutus.core.model.location.Institution;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 import java.util.Date;
@@ -62,25 +61,25 @@ public class UserDTO{
         return created;
     }
 
+    public void setCreated( Date created ){
+        this.created = created;
+    }
+
     @JsonFormat( pattern = "yyyy-MM-dd'T'HH:mm:ssZ" )
     public Date getCreatedISO8601(){
         return created;
-    }
-
-    public void setCreated( Date created ){
-        this.created = created;
     }
 
     public Date getUpdated(){
         return updated;
     }
 
+    public void setUpdated( Date updated ){
+        this.updated = updated;
+    }
+
     @JsonFormat( pattern = "yyyy-MM-dd'T'HH:mm:ssZ" )
     public Date getUpdatedISO8601(){
         return updated;
-    }
-
-    public void setUpdated( Date updated ){
-        this.updated = updated;
     }
 }

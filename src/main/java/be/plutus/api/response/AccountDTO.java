@@ -34,12 +34,12 @@ public class AccountDTO{
         return created;
     }
 
+    public void setCreated( Date created ){
+        this.created = created;
+    }
+
     @JsonFormat( pattern = "yyyy-MM-dd'T'HH:mm:ssZ" )
     public Date getCreatedISO8601(){
         return created;
-    }
-
-    public void setCreated( Date created ){
-        this.created = created;
     }
 }

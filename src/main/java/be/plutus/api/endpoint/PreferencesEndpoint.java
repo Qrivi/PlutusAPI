@@ -13,7 +13,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
-import java.util.Map;
 
 @RestController
 @RequestMapping(
@@ -68,7 +67,9 @@ public class PreferencesEndpoint{
         Preferences preferences = preferencesService.getPreferenceFromAccount( SecurityContext.getAccount().getId() );
 
         Response response = new Response.Builder()
-                .data( new HashMap<String, String>(){{ put( key, preferences.get( key ) ); }} )
+                .data( new HashMap<String, String>(){{
+                    put( key, preferences.get( key ) );
+                }} )
                 .success()
                 .build();
 

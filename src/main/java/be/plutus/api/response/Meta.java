@@ -15,7 +15,7 @@ import java.util.Date;
         "responseStatusCode",
         "requestTimestamp",
         "requestTimestampISO8601",
-})
+} )
 @JsonInclude( JsonInclude.Include.NON_NULL )
 public class Meta{
 
@@ -140,7 +140,7 @@ public class Meta{
         }
 
         public Meta build(){
-            return new Meta(user, updated, account, currency, timestamp, statusCode);
+            return new Meta( user, updated, account, currency, timestamp, statusCode );
         }
     }
 }

@@ -58,7 +58,7 @@ public class Converter{
         return dto;
     }
 
-    public static SessionDTO convert( Token token , int index ){
+    public static SessionDTO convert( Token token, int index ){
         SessionDTO dto = new SessionDTO();
         dto.setIndex( index );
         dto.setApplication( token.getApplicationName() );
@@ -84,7 +84,7 @@ public class Converter{
         return dto;
     }
 
-    public static TransactionDTO convert( Transaction transaction , Currency currency ){
+    public static TransactionDTO convert( Transaction transaction, Currency currency ){
         Location location = transaction.getLocation();
         Campus campus = location.getCampus();
         Institution institution = campus.getInstitution();

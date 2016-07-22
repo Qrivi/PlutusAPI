@@ -1,17 +1,18 @@
 package be.plutus.api.endpoint;
 
 import be.plutus.api.config.Config;
-import be.plutus.api.util.Converter;
 import be.plutus.api.request.UserAuthenticationDTO;
 import be.plutus.api.request.UserUCLLCreateDTO;
 import be.plutus.api.request.UserUpdateDTO;
-import be.plutus.api.response.*;
+import be.plutus.api.response.Response;
+import be.plutus.api.response.TransactionDTO;
+import be.plutus.api.response.UserDTO;
 import be.plutus.api.security.context.SecurityContext;
+import be.plutus.api.util.Converter;
 import be.plutus.core.model.account.Account;
 import be.plutus.core.model.account.Credit;
 import be.plutus.core.model.account.User;
 import be.plutus.core.model.currency.Currency;
-import be.plutus.core.model.currency.CurrencyConverter;
 import be.plutus.core.model.transaction.Transaction;
 import be.plutus.core.model.transaction.TransactionType;
 import be.plutus.core.service.AccountService;
@@ -56,7 +57,7 @@ public class UsersEndpoint{
         final int[] index = {0};
         List<UserDTO> users = account.getUsers()
                 .stream()
-                .map( user -> Converter.convert( user, index[0]++ ))
+                .map( user -> Converter.convert( user, index[0]++ ) )
                 .collect( Collectors.toList() );
 
         Response response = new Response.Builder()
@@ -91,7 +92,7 @@ public class UsersEndpoint{
 
     //region POST /account/users?institution=ucll
 
-    @RequestMapping( params = { "institution=ucll" }, method = RequestMethod.POST )
+    @RequestMapping( params = {"institution=ucll"}, method = RequestMethod.POST )
     public ResponseEntity<Response> post( @Valid @RequestBody UserUCLLCreateDTO dto, BindingResult result ){
 
         if( result.hasErrors() )
@@ -115,7 +116,7 @@ public class UsersEndpoint{
 
     //region GET /account/users/{index}
 
-    @RequestMapping( value = "/{index}" ,method = RequestMethod.GET )
+    @RequestMapping( value = "/{index}", method = RequestMethod.GET )
     public ResponseEntity<Response> getByIndex( @PathVariable( "index" ) int index ){
 
         Account account = accountService.getAccount( SecurityContext.getAccount().getId() );
@@ -137,7 +138,7 @@ public class UsersEndpoint{
 
     //region PUT /account/users/{index}
 
-    @RequestMapping( value = "/{index}" ,method = RequestMethod.PUT )
+    @RequestMapping( value = "/{index}", method = RequestMethod.PUT )
     public ResponseEntity<Response> putByIndex( @PathVariable( "index" ) int index, @Valid @RequestBody UserUpdateDTO dto, BindingResult result ){
 
         if( result.hasErrors() )
@@ -162,7 +163,7 @@ public class UsersEndpoint{
 
     //region POST /account/users/{index}/reset
 
-    @RequestMapping( value = "/{index}/reset" ,method = RequestMethod.POST )
+    @RequestMapping( value = "/{index}/reset", method = RequestMethod.POST )
     public ResponseEntity<Response> resetByIndex( @PathVariable( "index" ) int index, @Valid @RequestBody UserAuthenticationDTO dto, BindingResult result ){
 
         if( result.hasErrors() )
@@ -187,8 +188,8 @@ public class UsersEndpoint{
 
     //region GET /account/users/{index}/credit
 
-    @RequestMapping( value = "/{index}/credit" ,method = RequestMethod.GET )
-    public ResponseEntity<Response> getCreditByIndex( @PathVariable( "index" ) int index , @RequestParam( name = "currency", required = false ) String currencyParam ){
+    @RequestMapping( value = "/{index}/credit", method = RequestMethod.GET )
+    public ResponseEntity<Response> getCreditByIndex( @PathVariable( "index" ) int index, @RequestParam( name = "currency", required = false ) String currencyParam ){
 
         Account account = accountService.getAccount( SecurityContext.getAccount().getId() );
         User user = ( index < 0 || index > account.getUsers().size() - 1 ) ? null : account.getUsers().get( index );
@@ -215,7 +216,7 @@ public class UsersEndpoint{
 
     //region GET /account/users/{index}/transactions
 
-    @RequestMapping( value = "/{index}/transactions" ,method = RequestMethod.GET )
+    @RequestMapping( value = "/{index}/transactions", method = RequestMethod.GET )
     public ResponseEntity<Response> getTransactionsByIndex( @PathVariable( "index" ) int index,
                                                             @RequestParam( name = "currency", required = false ) String currencyParam,
                                                             @RequestParam( name = "limit", required = false ) Integer limitParam,
@@ -241,14 +242,14 @@ public class UsersEndpoint{
 
         List<Transaction> transactions;
 
-        if (type == null)
+        if( type == null )
             transactions = transactionService.getTransactionByUser( user.getId(), limit, offset );
         else
             transactions = transactionService.getTransactionByUserAndType( user.getId(), type, limit, offset );
 
         List<TransactionDTO> transactionDTOs = transactions
                 .stream()
-                .map( transaction -> Converter.convert(transaction, currency) )
+                .map( transaction -> Converter.convert( transaction, currency ) )
                 .collect( Collectors.toList() );
 
         Response response = new Response.Builder()
@@ -266,7 +267,7 @@ public class UsersEndpoint{
 
     //region GET /account/users/{index}/transactions/{id}
 
-    @RequestMapping( value = "/{index}/transactions/{id}" ,method = RequestMethod.GET )
+    @RequestMapping( value = "/{index}/transactions/{id}", method = RequestMethod.GET )
     public ResponseEntity<Response> getTransactionsByIndex( @PathVariable( "index" ) int index,
                                                             @PathVariable( "id" ) int id,
                                                             @RequestParam( name = "currency", required = false ) String currencyParam ){
@@ -300,7 +301,7 @@ public class UsersEndpoint{
 
     //region DELETE /account/users/{index}
 
-    @RequestMapping( value = "/{index}" ,method = RequestMethod.DELETE )
+    @RequestMapping( value = "/{index}", method = RequestMethod.DELETE )
     public ResponseEntity<Response> deleteByIndex( @PathVariable( "index" ) int index, @Valid @RequestBody UserAuthenticationDTO dto, BindingResult result ){
 
         if( result.hasErrors() )

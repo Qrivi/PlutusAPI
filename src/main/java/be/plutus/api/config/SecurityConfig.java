@@ -28,25 +28,25 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
     private MessageService messageService;
 
     @Override
-    public void configure( WebSecurity web ) throws Exception {
+    public void configure( WebSecurity web ) throws Exception{
         web
-            .ignoring()
-            .antMatchers( HttpMethod.POST, "/auth" )
-            .antMatchers( HttpMethod.POST, "/account" );
+                .ignoring()
+                .antMatchers( HttpMethod.POST, "/auth" )
+                .antMatchers( HttpMethod.POST, "/account" );
     }
 
     @Override
     protected void configure( HttpSecurity http ) throws Exception{
         http
-            .authorizeRequests()
+                .authorizeRequests()
                 .anyRequest().fullyAuthenticated()
-        .and()
-            .addFilterBefore( new TokenAuthenticationFilter( tokenService, objectMapper, messageService ), BasicAuthenticationFilter.class )
-            .sessionManagement()
-            .sessionCreationPolicy( SessionCreationPolicy.STATELESS )
-        .and()
-            .httpBasic().disable()
-            .csrf().disable()
-            .anonymous().disable();
+                .and()
+                .addFilterBefore( new TokenAuthenticationFilter( tokenService, objectMapper, messageService ), BasicAuthenticationFilter.class )
+                .sessionManagement()
+                .sessionCreationPolicy( SessionCreationPolicy.STATELESS )
+                .and()
+                .httpBasic().disable()
+                .csrf().disable()
+                .anonymous().disable();
     }
 }

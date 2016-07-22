@@ -52,26 +52,26 @@ public class SessionDTO{
         return created;
     }
 
+    public void setCreated( Date created ){
+        this.created = created;
+    }
+
     @JsonFormat( pattern = "yyyy-MM-dd'T'HH:mm:ssZ" )
     public Date getCreatedISO8601(){
         return created;
-    }
-
-    public void setCreated( Date created ){
-        this.created = created;
     }
 
     public Date getExpires(){
         return expires;
     }
 
+    public void setExpires( Date expires ){
+        this.expires = expires;
+    }
+
     @JsonFormat( pattern = "yyyy-MM-dd'T'HH:mm:ssZ" )
     public Date getExpiresISO8601(){
         return expires;
-    }
-
-    public void setExpires( Date expires ){
-        this.expires = expires;
     }
 
 }

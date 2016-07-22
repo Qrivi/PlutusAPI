@@ -42,12 +42,12 @@ public class TokenDTO{
         return expires;
     }
 
+    public void setExpires( Date expires ){
+        this.expires = expires;
+    }
+
     @JsonFormat( pattern = "yyyy-MM-dd'T'HH:mm:ssZ" )
     public Date getExpiresISO8601(){
         return expires;
-    }
-
-    public void setExpires( Date expires ){
-        this.expires = expires;
     }
 }

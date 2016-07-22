@@ -42,12 +42,12 @@ public class RequestDTO{
         return timestamp;
     }
 
+    public void setTimestamp( Date timestamp ){
+        this.timestamp = timestamp;
+    }
+
     @JsonFormat( pattern = "yyyy-MM-dd'T'HH:mm:ssZ" )
     public Date getTimestampISO8601(){
         return timestamp;
-    }
-
-    public void setTimestamp( Date timestamp ){
-        this.timestamp = timestamp;
     }
 }

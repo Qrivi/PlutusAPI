@@ -123,7 +123,7 @@ public class Response{
         //endregion
 
         public Response build(){
-            return new Response(meta.build(), data, errors);
+            return new Response( meta.build(), data, errors );
         }
     }
 }

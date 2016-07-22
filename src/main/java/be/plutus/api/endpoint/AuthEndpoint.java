@@ -1,8 +1,8 @@
 package be.plutus.api.endpoint;
 
-import be.plutus.api.util.Converter;
 import be.plutus.api.request.AuthenticationDTO;
 import be.plutus.api.response.Response;
+import be.plutus.api.util.Converter;
 import be.plutus.api.util.MessageService;
 import be.plutus.core.model.account.Account;
 import be.plutus.core.model.account.AccountStatus;

@@ -13,17 +13,17 @@ public class MessageService{
     MessageSource messageSource;
 
     public String get( String id ){
-        try {
+        try{
             return messageSource.getMessage( id, null, LocaleContextHolder.getLocale() );
-        } catch( NoSuchMessageException e ) {
+        }catch( NoSuchMessageException e ){
             return id;
         }
     }
 
     public String get( String id, Object... args ){
-        try {
+        try{
             return messageSource.getMessage( id, args, LocaleContextHolder.getLocale() );
-        } catch( NoSuchMessageException e ) {
+        }catch( NoSuchMessageException e ){
             return id;
         }
     }
