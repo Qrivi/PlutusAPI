@@ -34,7 +34,7 @@ public class AccountUpdateDTO{
     }
 
     public Currency getNewDefaultCurrency(){
-        if( newDefaultCurrency == null || newDefaultCurrency.equals( "" ) )
+        if( "".equals( newDefaultCurrency ) )
             return null;
         return Currency.valueOf( newDefaultCurrency.toUpperCase() );
     }

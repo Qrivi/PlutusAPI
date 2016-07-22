@@ -16,7 +16,7 @@ public class SupportedCurrencyValidator implements ConstraintValidator<Supported
 
     @Override
     public boolean isValid( String value, ConstraintValidatorContext context ){
-        if( optional && ( value == null || value.equals( "" ) ) )
+        if( optional && "".equals( value ) )
             return true;
 
         if( value != null )

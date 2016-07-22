@@ -21,7 +21,7 @@ public class CorrectUsernameValidator implements ConstraintValidator<CorrectUser
 
     @Override
     public boolean isValid( String value, ConstraintValidatorContext context ){
-        if( value == null || value.equals( "" ) )
+        if( "".equals( value ) )
             return false;
 
         Institution institution = locationService.getInstitutionBySlur( slur );

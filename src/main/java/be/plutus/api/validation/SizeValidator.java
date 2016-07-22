@@ -17,7 +17,7 @@ public class SizeValidator implements ConstraintValidator<Size, String>{
 
     @Override
     public boolean isValid( String value, ConstraintValidatorContext context ){
-        if( optional && ( value == null || value.equals( "" ) ) )
+        if( optional && "".equals( value ) )
             return true;
 
         return value != null && value.length() >= min && value.length() <= max;

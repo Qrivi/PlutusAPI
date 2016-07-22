@@ -36,7 +36,7 @@ public class AccountCreateDTO{
     }
 
     public Currency getDefaultCurrency(){
-        if( defaultCurrency == null || defaultCurrency.equals( "" ) )
+        if( "".equals( defaultCurrency ) )
             return null;
         return Currency.valueOf( defaultCurrency.toUpperCase() );
     }

@@ -14,7 +14,7 @@ public class EmailValidator implements ConstraintValidator<Email, String>{
 
     @Override
     public boolean isValid( String value, ConstraintValidatorContext context ){
-        if( optional && ( value == null || value.equals( "" ) ) )
+        if( optional && "".equals( value ) )
             return true;
 
         if( value != null ){
