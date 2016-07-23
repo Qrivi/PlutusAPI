@@ -8,7 +8,7 @@ import java.util.Date;
 @JsonPropertyOrder( {
         "status",
         "request",
-        "requestISO8601",
+        "requestISO8601"
 } )
 public class Meta{
 

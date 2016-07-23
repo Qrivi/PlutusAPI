@@ -7,9 +7,14 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import java.util.Date;
 
 @JsonPropertyOrder( {
+        "status",
+        "request",
+        "requestISO8601",
+        "account",
+        "currency",
         "user",
         "updated",
-        "updatedISO8601",
+        "updatedISO8601"
 } )
 public class UserMeta extends AccountMeta{
 

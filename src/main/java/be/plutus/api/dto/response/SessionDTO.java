@@ -13,7 +13,7 @@ import java.util.Date;
         "created",
         "createdISO8601",
         "expires",
-        "expiresISO8601",
+        "expiresISO8601"
 } )
 public class SessionDTO{
 
