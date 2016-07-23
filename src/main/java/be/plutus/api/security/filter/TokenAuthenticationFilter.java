@@ -2,7 +2,7 @@ package be.plutus.api.security.filter;
 
 import be.plutus.api.response.Meta;
 import be.plutus.api.response.Response;
-import be.plutus.api.security.*;
+import be.plutus.api.security.exception.*;
 import be.plutus.api.utils.MessageService;
 import be.plutus.core.model.account.Account;
 import be.plutus.core.model.account.AccountStatus;
