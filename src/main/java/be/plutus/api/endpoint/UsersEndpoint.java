@@ -13,6 +13,9 @@ import be.plutus.api.dto.response.UserDTO;
 import be.plutus.api.response.UserMeta;
 import be.plutus.api.security.context.SecurityContext;
 import be.plutus.api.utils.Converter;
+import be.plutus.api.utils.MessageService;
+import be.plutus.core.exception.AccountAlreadyExistsException;
+import be.plutus.core.exception.UserAlreadyExistsException;
 import be.plutus.core.model.account.Account;
 import be.plutus.core.model.account.Credit;
 import be.plutus.core.model.account.User;
@@ -50,6 +53,9 @@ public class UsersEndpoint{
 
     @Autowired
     LocationService locationService;
+
+    @Autowired
+    MessageService messageService;
 
     //region GET /account/users
 
@@ -343,6 +349,30 @@ public class UsersEndpoint{
                 .build();
 
         return new ResponseEntity<>( response, HttpStatus.OK );
+    }
+
+    //endregion
+
+    //region Exception Handlers
+
+    @ExceptionHandler( AccountAlreadyExistsException.class )
+    public ResponseEntity<Response> accountAlreadyExists( Exception e ){
+
+        Response response = new Response.Builder()
+                .meta( Meta.badRequest() )
+                .errors( messageService.get( e.getClass().getName() ) )
+                .build();
+        return new ResponseEntity<>( response, HttpStatus.BAD_REQUEST );
+    }
+
+    @ExceptionHandler(  UserAlreadyExistsException.class )
+    public ResponseEntity<Response> userAlreadyExists( Exception e ){
+
+        Response response = new Response.Builder()
+                .meta( AccountMeta.badRequest() )
+                .errors( messageService.get( e.getClass().getName() ) )
+                .build();
+        return new ResponseEntity<>( response, HttpStatus.BAD_REQUEST );
     }
 
     //endregion
