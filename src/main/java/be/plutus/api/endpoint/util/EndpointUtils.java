@@ -1,4 +1,4 @@
-package be.plutus.api.endpoint.utils;
+package be.plutus.api.endpoint.util;
 
 import be.plutus.api.response.Meta;
 import be.plutus.api.response.Response;

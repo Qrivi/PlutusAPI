@@ -1,13 +1,13 @@
 package be.plutus.api.endpoint;
 
-import be.plutus.api.endpoint.utils.EndpointUtils;
+import be.plutus.api.endpoint.util.EndpointUtils;
 import be.plutus.api.dto.request.AccountCreateDTO;
 import be.plutus.api.dto.request.AccountRemoveDTO;
 import be.plutus.api.dto.request.AccountUpdateDTO;
 import be.plutus.api.response.Meta;
 import be.plutus.api.response.Response;
 import be.plutus.api.security.context.SecurityContext;
-import be.plutus.api.utils.Converter;
+import be.plutus.api.util.Converter;
 import be.plutus.core.model.account.Account;
 import be.plutus.core.service.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;

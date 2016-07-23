@@ -5,7 +5,7 @@ import be.plutus.api.response.Meta;
 import be.plutus.api.response.Response;
 import be.plutus.api.dto.response.SessionDTO;
 import be.plutus.api.security.context.SecurityContext;
-import be.plutus.api.utils.Converter;
+import be.plutus.api.util.Converter;
 import be.plutus.core.model.token.Token;
 import be.plutus.core.service.AccountService;
 import be.plutus.core.service.TokenService;

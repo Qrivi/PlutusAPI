@@ -1,7 +1,7 @@
 package be.plutus.api.config;
 
 import be.plutus.api.security.filter.TokenAuthenticationFilter;
-import be.plutus.api.utils.MessageService;
+import be.plutus.api.util.MessageService;
 import be.plutus.core.service.TokenService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;

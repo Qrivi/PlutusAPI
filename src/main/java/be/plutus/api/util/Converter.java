@@ -1,4 +1,4 @@
-package be.plutus.api.utils;
+package be.plutus.api.util;
 
 import be.plutus.api.dto.response.*;
 import be.plutus.core.model.account.Account;

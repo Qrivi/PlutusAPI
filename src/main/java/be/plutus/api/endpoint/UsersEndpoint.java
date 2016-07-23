@@ -1,7 +1,7 @@
 package be.plutus.api.endpoint;
 
 import be.plutus.api.config.Config;
-import be.plutus.api.endpoint.utils.EndpointUtils;
+import be.plutus.api.endpoint.util.EndpointUtils;
 import be.plutus.api.dto.request.UserAuthenticationDTO;
 import be.plutus.api.dto.request.UserUCLLCreateDTO;
 import be.plutus.api.dto.request.UserUpdateDTO;
@@ -12,8 +12,8 @@ import be.plutus.api.dto.response.TransactionDTO;
 import be.plutus.api.dto.response.UserDTO;
 import be.plutus.api.response.UserMeta;
 import be.plutus.api.security.context.SecurityContext;
-import be.plutus.api.utils.Converter;
-import be.plutus.api.utils.MessageService;
+import be.plutus.api.util.Converter;
+import be.plutus.api.util.MessageService;
 import be.plutus.core.exception.AccountAlreadyExistsException;
 import be.plutus.core.exception.UserAlreadyExistsException;
 import be.plutus.core.model.account.Account;
