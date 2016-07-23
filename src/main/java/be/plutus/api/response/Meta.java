@@ -6,31 +6,31 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import java.util.Date;
 
 @JsonPropertyOrder( {
-        "responseStatusCode",
-        "requestTimestamp",
-        "requestTimestampISO8601",
+        "status",
+        "request",
+        "requestISO8601",
 } )
 public class Meta{
 
-    private int responseStatusCode;
-    private Date requestTimestamp;
+    private int status;
+    private Date request;
 
     Meta( int responseStatusCode, Date requestTimestamp ){
-        this.requestTimestamp = requestTimestamp;
-        this.responseStatusCode = responseStatusCode;
+        this.request = requestTimestamp;
+        this.status = responseStatusCode;
     }
 
-    public int getResponseStatusCode(){
-        return responseStatusCode;
+    public int getStatus(){
+        return status;
     }
 
-    public Date getRequestTimestamp(){
-        return requestTimestamp;
+    public Date getRequest(){
+        return request;
     }
 
     @JsonFormat( pattern = "yyyy-MM-dd'T'HH:mm:ssZ" )
-    public Date getRequestTimestampISO8601(){
-        return requestTimestamp;
+    public Date getRequestISO8601(){
+        return request;
     }
 
     public static Meta success(){

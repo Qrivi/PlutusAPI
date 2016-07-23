@@ -1,9 +1,20 @@
 package be.plutus.api.dto.response;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 import java.util.Date;
 
+@JsonPropertyOrder( {
+        "index",
+        "application",
+        "device",
+        "ip",
+        "created",
+        "createdISO8601",
+        "expires",
+        "expiresISO8601",
+} )
 public class SessionDTO{
 
     private int index;

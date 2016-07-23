@@ -12,8 +12,8 @@ public class TransactionDTO{
     private String description;
     private double amount;
     private TransactionType type;
-    private Date timestamp;
     private LocationDTO location;
+    private Date timestamp;
 
     public TransactionDTO(){
     }
@@ -58,6 +58,14 @@ public class TransactionDTO{
         this.type = type;
     }
 
+    public LocationDTO getLocation(){
+        return location;
+    }
+
+    public void setLocation( LocationDTO location ){
+        this.location = location;
+    }
+
     public Date getTimestamp(){
         return timestamp;
     }
@@ -69,13 +77,5 @@ public class TransactionDTO{
     @JsonFormat( pattern = "yyyy-MM-dd'T'HH:mm:ssZ" )
     public Date getTimestampISO8601(){
         return timestamp;
-    }
-
-    public LocationDTO getLocation(){
-        return location;
-    }
-
-    public void setLocation( LocationDTO location ){
-        this.location = location;
     }
 }

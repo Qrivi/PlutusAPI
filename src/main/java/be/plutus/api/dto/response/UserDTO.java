@@ -1,9 +1,21 @@
 package be.plutus.api.dto.response;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 import java.util.Date;
 
+@JsonPropertyOrder( {
+        "index",
+        "firstName",
+        "lastName",
+        "username",
+        "institution",
+        "created",
+        "createdISO8601",
+        "updated",
+        "updated8601"
+} )
 public class UserDTO{
 
     private int index;
