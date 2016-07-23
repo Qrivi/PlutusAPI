@@ -1,62 +1,27 @@
 package be.plutus.api.response;
 
-import be.plutus.core.model.currency.Currency;
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 import java.util.Date;
 
 @JsonPropertyOrder( {
-        "user",
-        "updated",
-        "updatedISO8601",
-        "account",
-        "currency",
         "responseStatusCode",
         "requestTimestamp",
         "requestTimestampISO8601",
 } )
-@JsonInclude( JsonInclude.Include.NON_NULL )
 public class Meta{
 
-    private String user;
-    private Date updated;
-
-    private String account;
-    private Currency currency;
-
-    private Date requestTimestamp;
     private int responseStatusCode;
+    private Date requestTimestamp;
 
-    private Meta( String user, Date updated, String account, Currency currency, Date requestTimestamp, int responseStatusCode ){
-        this.user = user;
-        this.updated = updated;
-        this.account = account;
-        this.currency = currency;
+    Meta( int responseStatusCode, Date requestTimestamp ){
         this.requestTimestamp = requestTimestamp;
         this.responseStatusCode = responseStatusCode;
     }
 
-    public String getUser(){
-        return user;
-    }
-
-    public Date getUpdated(){
-        return updated;
-    }
-
-    @JsonFormat( pattern = "yyyy-MM-dd'T'HH:mm:ssZ" )
-    public Date getUpdatedISO8601(){
-        return updated;
-    }
-
-    public String getAccount(){
-        return account;
-    }
-
-    public Currency getCurrency(){
-        return currency;
+    public int getResponseStatusCode(){
+        return responseStatusCode;
     }
 
     public Date getRequestTimestamp(){
@@ -68,85 +33,83 @@ public class Meta{
         return requestTimestamp;
     }
 
-    public int getResponseStatusCode(){
-        return responseStatusCode;
+    public static Meta success(){
+        return new Meta.Builder().success().build();
     }
 
-    public static class Builder{
+    public static Meta created(){
+        return new Meta.Builder().created().build();
+    }
 
-        private String user;
-        private Date updated;
+    public static Meta badRequest(){
+        return new Meta.Builder().badRequest().build();
+    }
 
-        private String account;
-        private Currency currency;
+    public static Meta unauthorized(){
+        return new Meta.Builder().unauthorized().build();
+    }
 
-        private Date timestamp;
-        private int statusCode;
+    public static Meta forbidden(){
+        return new Meta.Builder().forbidden().build();
+    }
 
-        public Builder user( String user ){
-            this.user = user;
-            return this;
-        }
+    public static Meta serverError(){
+        return new Meta.Builder().serverError().build();
+    }
 
-        public Builder updated( Date updated ){
-            this.updated = updated;
-            return this;
-        }
+    public static Meta notFound(){
+        return new Meta.Builder().notFound().build();
+    }
 
-        public Builder account( String email ){
-            this.account = email;
-            return this;
-        }
+    public static class Builder<B extends Meta.Builder<B>>{
 
-        public Builder currency( Currency currency ){
-            this.currency = currency;
-            return this;
-        }
+        protected Date timestamp;
+        protected int statusCode;
 
-        public Builder success(){
+        public B success(){
             this.timestamp = new Date();
             this.statusCode = 200;
-            return this;
+            return (B)this;
         }
 
-        public Builder created(){
+        public B created(){
             this.timestamp = new Date();
             this.statusCode = 201;
-            return this;
+            return (B)this;
         }
 
-        public Builder badRequest(){
+        public B badRequest(){
             this.timestamp = new Date();
             this.statusCode = 400;
-            return this;
+            return (B)this;
         }
 
-        public Builder unauthorized(){
+        public B unauthorized(){
             this.timestamp = new Date();
             this.statusCode = 401;
-            return this;
+            return (B)this;
         }
 
-        public Builder forbidden(){
+        public B forbidden(){
             this.timestamp = new Date();
             this.statusCode = 403;
-            return this;
+            return (B)this;
         }
 
-        public Builder serverError(){
+        public B serverError(){
             this.timestamp = new Date();
             this.statusCode = 500;
-            return this;
+            return (B)this;
         }
 
-        public Builder notFound(){
+        public B notFound(){
             this.timestamp = new Date();
             this.statusCode = 404;
-            return this;
+            return (B)this;
         }
 
         public Meta build(){
-            return new Meta( user, updated, account, currency, timestamp, statusCode );
+            return new Meta(statusCode, timestamp);
         }
     }
 }

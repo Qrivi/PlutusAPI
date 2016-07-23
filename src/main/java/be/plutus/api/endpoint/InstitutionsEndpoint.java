@@ -1,6 +1,7 @@
 package be.plutus.api.endpoint;
 
 import be.plutus.api.dto.response.InstitutionDTO;
+import be.plutus.api.response.Meta;
 import be.plutus.api.response.Response;
 import be.plutus.api.utils.Converter;
 import be.plutus.core.service.LocationService;
@@ -36,8 +37,8 @@ public class InstitutionsEndpoint{
                 .collect( Collectors.toList() );
 
         Response response = new Response.Builder()
+                .meta( Meta.success() )
                 .data( institutions )
-                .success()
                 .build();
 
         return new ResponseEntity<>( response, HttpStatus.OK );

@@ -1,5 +1,6 @@
 package be.plutus.api.security.filter;
 
+import be.plutus.api.response.Meta;
 import be.plutus.api.response.Response;
 import be.plutus.api.security.*;
 import be.plutus.api.utils.MessageService;
@@ -81,15 +82,18 @@ public class TokenAuthenticationFilter extends GenericFilterBean{
 
             chain.doFilter( request, response );
         }catch( AuthenticationException e ){
-            Response.Builder builder = new Response.Builder();
+            Meta.Builder meta = new Meta.Builder();
+            meta = (e.getStatus() == 403) ? meta.forbidden() : meta.unauthorized();
 
-            builder = e.getStatus() == 403 ? builder.forbidden() : builder.unauthorized();
-            builder = builder.errors( messageService.get( e.getClass().getName() ) );
+            Response response2 = new Response.Builder()
+                    .meta( meta.build() )
+                    .errors( messageService.get( e.getClass().getName() ) )
+                    .build();
 
             response.setContentType( "application/json" );
             response.setStatus( e.getStatus() );
 
-            objectMapper.writeValue( res.getOutputStream(), builder.build() );
+            objectMapper.writeValue( res.getOutputStream(), response2 );
         }
     }
 

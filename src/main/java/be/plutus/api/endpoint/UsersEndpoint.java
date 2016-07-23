@@ -5,9 +5,12 @@ import be.plutus.api.endpoint.utils.EndpointUtils;
 import be.plutus.api.dto.request.UserAuthenticationDTO;
 import be.plutus.api.dto.request.UserUCLLCreateDTO;
 import be.plutus.api.dto.request.UserUpdateDTO;
+import be.plutus.api.response.AccountMeta;
+import be.plutus.api.response.Meta;
 import be.plutus.api.response.Response;
 import be.plutus.api.dto.response.TransactionDTO;
 import be.plutus.api.dto.response.UserDTO;
+import be.plutus.api.response.UserMeta;
 import be.plutus.api.security.context.SecurityContext;
 import be.plutus.api.utils.Converter;
 import be.plutus.core.model.account.Account;
@@ -61,10 +64,15 @@ public class UsersEndpoint{
                 .map( user -> Converter.convert( user, index[0]++ ) )
                 .collect( Collectors.toList() );
 
-        Response response = new Response.Builder()
-                .account( account )
-                .data( users )
+        Meta meta = new AccountMeta.Builder()
+                .account( account.getEmail() )
+                .currency( account.getDefaultCurrency() )
                 .success()
+                .build();
+
+        Response response = new Response.Builder()
+                .meta( meta )
+                .data( users )
                 .build();
 
         return new ResponseEntity<>( response, HttpStatus.OK );
@@ -83,7 +91,7 @@ public class UsersEndpoint{
         accountService.removeAllUsersFromAccount( SecurityContext.getAccount().getId() );
 
         Response response = new Response.Builder()
-                .success()
+                .meta( Meta.success() )
                 .build();
 
         return new ResponseEntity<>( response, HttpStatus.OK );
@@ -107,7 +115,7 @@ public class UsersEndpoint{
                 locationService.getInstitutionBySlur( "ucll" ) );
 
         Response response = new Response.Builder()
-                .created()
+                .meta( Meta.created() )
                 .build();
 
         return new ResponseEntity<>( response, HttpStatus.CREATED );
@@ -124,12 +132,17 @@ public class UsersEndpoint{
         User user = ( index < 0 || index > account.getUsers().size() - 1 ) ? null : account.getUsers().get( index );
 
         if( user == null )
-            return new ResponseEntity<>( new Response.Builder().notFound().build(), HttpStatus.NOT_FOUND );
+            return new ResponseEntity<>( new Response.Builder().meta( Meta.notFound() ).build(), HttpStatus.NOT_FOUND );
+
+        Meta meta = new AccountMeta.Builder()
+                .account( account.getEmail() )
+                .currency( account.getDefaultCurrency() )
+                .success()
+                .build();
 
         Response response = new Response.Builder()
-                .account( account )
+                .meta( meta )
                 .data( Converter.convert( user, index ) )
-                .success()
                 .build();
 
         return new ResponseEntity<>( response, HttpStatus.OK );
@@ -149,12 +162,12 @@ public class UsersEndpoint{
         User user = ( index < 0 || index > account.getUsers().size() - 1 ) ? null : account.getUsers().get( index );
 
         if( user == null )
-            return new ResponseEntity<>( new Response.Builder().notFound().build(), HttpStatus.NOT_FOUND );
+            return new ResponseEntity<>( new Response.Builder().meta( Meta.notFound() ).build(), HttpStatus.NOT_FOUND );
 
         accountService.updateUser( user.getId(), dto.getNewPassword() );
 
         Response response = new Response.Builder()
-                .success()
+                .meta( Meta.success() )
                 .build();
 
         return new ResponseEntity<>( response, HttpStatus.OK );
@@ -174,12 +187,12 @@ public class UsersEndpoint{
         User user = ( index < 0 || index > account.getUsers().size() - 1 ) ? null : account.getUsers().get( index );
 
         if( user == null )
-            return new ResponseEntity<>( new Response.Builder().notFound().build(), HttpStatus.NOT_FOUND );
+            return new ResponseEntity<>( new Response.Builder().meta( Meta.notFound() ).build(), HttpStatus.NOT_FOUND );
 
         accountService.resetTransactionsFromUser( user.getId() );
 
         Response response = new Response.Builder()
-                .success()
+                .meta( Meta.success() )
                 .build();
 
         return new ResponseEntity<>( response, HttpStatus.OK );
@@ -196,18 +209,23 @@ public class UsersEndpoint{
         User user = ( index < 0 || index > account.getUsers().size() - 1 ) ? null : account.getUsers().get( index );
 
         if( user == null )
-            return new ResponseEntity<>( new Response.Builder().notFound().build(), HttpStatus.NOT_FOUND );
+            return new ResponseEntity<>( new Response.Builder().meta( Meta.notFound() ).build(), HttpStatus.NOT_FOUND );
 
         Credit credit = user.getCredit();
         Currency currency = Optional.ofNullable( Currency.getFromAbbreviation( currencyParam ) )
                 .orElse( account.getDefaultCurrency() );
 
-        Response response = new Response.Builder()
-                .account( account )
-                .user( user )
+        Meta meta = new UserMeta.Builder()
+                .user( user.getUsername() )
+                .updated( user.getFetchDate() )
+                .account( account.getEmail() )
                 .currency( currency )
-                .data( Converter.convert( credit, currency ) )
                 .success()
+                .build();
+
+        Response response = new Response.Builder()
+                .meta( meta )
+                .data( Converter.convert( credit, currency ) )
                 .build();
 
         return new ResponseEntity<>( response, HttpStatus.OK );
@@ -228,7 +246,7 @@ public class UsersEndpoint{
         User user = ( index < 0 || index > account.getUsers().size() - 1 ) ? null : account.getUsers().get( index );
 
         if( user == null )
-            return new ResponseEntity<>( new Response.Builder().notFound().build(), HttpStatus.NOT_FOUND );
+            return new ResponseEntity<>( new Response.Builder().meta( Meta.notFound() ).build(), HttpStatus.NOT_FOUND );
 
         Currency currency = Optional.ofNullable( Currency.getFromAbbreviation( currencyParam ) )
                 .orElse( account.getDefaultCurrency() );
@@ -253,12 +271,17 @@ public class UsersEndpoint{
                 .map( transaction -> Converter.convert( transaction, currency ) )
                 .collect( Collectors.toList() );
 
-        Response response = new Response.Builder()
-                .account( account )
+        Meta meta = new UserMeta.Builder()
+                .user( user.getUsername() )
+                .updated( user.getFetchDate() )
+                .account( account.getEmail() )
                 .currency( currency )
-                .user( user )
-                .data( transactionDTOs )
                 .success()
+                .build();
+
+        Response response = new Response.Builder()
+                .meta( meta )
+                .data( transactionDTOs )
                 .build();
 
         return new ResponseEntity<>( response, HttpStatus.OK );
@@ -277,7 +300,7 @@ public class UsersEndpoint{
         User user = ( index < 0 || index > account.getUsers().size() - 1 ) ? null : account.getUsers().get( index );
 
         if( user == null )
-            return new ResponseEntity<>( new Response.Builder().notFound().build(), HttpStatus.NOT_FOUND );
+            return new ResponseEntity<>( new Response.Builder().meta( Meta.notFound() ).build(), HttpStatus.NOT_FOUND );
 
         Currency currency = Optional.ofNullable( Currency.getFromAbbreviation( currencyParam ) )
                 .orElse( account.getDefaultCurrency() );
@@ -285,14 +308,19 @@ public class UsersEndpoint{
         Transaction transaction = transactionService.getTransaction( id );
 
         if( !Objects.equals( transaction.getUser().getId(), user.getId() ) )
-            return new ResponseEntity<>( new Response.Builder().notFound().build(), HttpStatus.NOT_FOUND );
+            return new ResponseEntity<>( new Response.Builder().meta( Meta.notFound() ).build(), HttpStatus.NOT_FOUND );
+
+        Meta meta = new UserMeta.Builder()
+                .user( user.getUsername() )
+                .updated( user.getFetchDate() )
+                .account( account.getEmail() )
+                .currency( currency )
+                .success()
+                .build();
 
         Response response = new Response.Builder()
-                .account( account )
-                .currency( currency )
-                .user( user )
+                .meta( meta )
                 .data( Converter.convert( transaction, currency ) )
-                .success()
                 .build();
 
         return new ResponseEntity<>( response, HttpStatus.OK );
@@ -311,7 +339,7 @@ public class UsersEndpoint{
         accountService.removeUserFromAccount( SecurityContext.getAccount().getId(), index );
 
         Response response = new Response.Builder()
-                .success()
+                .meta( Meta.success() )
                 .build();
 
         return new ResponseEntity<>( response, HttpStatus.OK );

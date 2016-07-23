@@ -1,6 +1,7 @@
 package be.plutus.api.endpoint;
 
 import be.plutus.api.dto.response.RequestDTO;
+import be.plutus.api.response.Meta;
 import be.plutus.api.response.Response;
 import be.plutus.api.dto.response.SessionDTO;
 import be.plutus.api.security.context.SecurityContext;
@@ -40,7 +41,7 @@ public class SessionsEndpoint{
 
         Response response = new Response.Builder()
                 .data( getSessions() )
-                .success()
+                .meta( Meta.success() )
                 .build();
 
         return new ResponseEntity<>( response, HttpStatus.OK );
@@ -56,11 +57,11 @@ public class SessionsEndpoint{
         List<SessionDTO> sessions = getSessions();
 
         if( index < 0 || index > sessions.size() - 1 )
-            return new ResponseEntity<>( new Response.Builder().notFound().build(), HttpStatus.NOT_FOUND );
+            return new ResponseEntity<>( new Response.Builder().meta( Meta.notFound() ).build(), HttpStatus.NOT_FOUND );
 
         Response response = new Response.Builder()
                 .data( sessions.get( index ) )
-                .success()
+                .meta( Meta.success() )
                 .build();
 
         return new ResponseEntity<>( response, HttpStatus.OK );
@@ -76,12 +77,12 @@ public class SessionsEndpoint{
         List<Token> tokens = tokenService.getTokensFromAccount( SecurityContext.getAccount().getId() );
 
         if( index < 0 || index > tokens.size() - 1 )
-            return new ResponseEntity<>( new Response.Builder().notFound().build(), HttpStatus.NOT_FOUND );
+            return new ResponseEntity<>( new Response.Builder().meta( Meta.notFound() ).build(), HttpStatus.NOT_FOUND );
 
         tokenService.deactivateToken( tokens.get( index ).getId() );
 
         Response response = new Response.Builder()
-                .success()
+                .meta( Meta.success() )
                 .build();
 
         return new ResponseEntity<>( response, HttpStatus.OK );
@@ -97,13 +98,13 @@ public class SessionsEndpoint{
         List<Token> tokens = tokenService.getTokensFromAccount( SecurityContext.getAccount().getId() );
 
         if( index < 0 || index > tokens.size() - 1 )
-            return new ResponseEntity<>( new Response.Builder().notFound().build(), HttpStatus.NOT_FOUND );
+            return new ResponseEntity<>( new Response.Builder().meta( Meta.notFound() ).build(), HttpStatus.NOT_FOUND );
 
         List<RequestDTO> requests = getRequestsFromToken( tokens.get( index ).getId() );
 
         Response response = new Response.Builder()
+                .meta( Meta.success() )
                 .data( requests )
-                .success()
                 .build();
 
         return new ResponseEntity<>( response, HttpStatus.OK );

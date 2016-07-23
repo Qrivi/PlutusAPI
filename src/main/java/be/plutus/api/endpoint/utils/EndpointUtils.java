@@ -1,5 +1,6 @@
 package be.plutus.api.endpoint.utils;
 
+import be.plutus.api.response.Meta;
 import be.plutus.api.response.Response;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpStatus;
@@ -17,7 +18,7 @@ public class EndpointUtils{
                 .map( DefaultMessageSourceResolvable::getDefaultMessage )
                 .collect( Collectors.toList() )
         );
-        return new ResponseEntity<>( response.badRequest().build(), HttpStatus.BAD_REQUEST );
+        return new ResponseEntity<>( response.meta( Meta.badRequest() ).build(), HttpStatus.BAD_REQUEST );
     }
 
 }

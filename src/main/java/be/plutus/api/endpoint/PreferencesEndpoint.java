@@ -2,6 +2,7 @@ package be.plutus.api.endpoint;
 
 import be.plutus.api.dto.request.PreferenceCreateDTO;
 import be.plutus.api.dto.request.PreferenceValueCreateDTO;
+import be.plutus.api.response.Meta;
 import be.plutus.api.response.Response;
 import be.plutus.api.security.context.SecurityContext;
 import be.plutus.core.model.preferences.Preferences;
@@ -32,8 +33,8 @@ public class PreferencesEndpoint{
         Preferences preferences = preferencesService.getPreferenceFromAccount( SecurityContext.getAccount().getId() );
 
         Response response = new Response.Builder()
+                .meta( Meta.success() )
                 .data( preferences.toMap() )
-                .success()
                 .build();
 
         return new ResponseEntity<>( response, HttpStatus.OK );
@@ -51,7 +52,7 @@ public class PreferencesEndpoint{
         preferencesService.addPreference( preferences.getId(), dto.getKey(), dto.getValue() );
 
         Response response = new Response.Builder()
-                .created()
+                .meta( Meta.created() )
                 .build();
 
         return new ResponseEntity<>( response, HttpStatus.CREATED );
@@ -67,10 +68,10 @@ public class PreferencesEndpoint{
         Preferences preferences = preferencesService.getPreferenceFromAccount( SecurityContext.getAccount().getId() );
 
         Response response = new Response.Builder()
+                .meta( Meta.success() )
                 .data( new HashMap<String, String>(){{
                     put( key, preferences.get( key ) );
                 }} )
-                .success()
                 .build();
 
         return new ResponseEntity<>( response, HttpStatus.OK );
@@ -88,7 +89,7 @@ public class PreferencesEndpoint{
         preferencesService.addPreference( preferences.getId(), key, dto.getValue() );
 
         Response response = new Response.Builder()
-                .success()
+                .meta( Meta.success() )
                 .build();
 
         return new ResponseEntity<>( response, HttpStatus.OK );
