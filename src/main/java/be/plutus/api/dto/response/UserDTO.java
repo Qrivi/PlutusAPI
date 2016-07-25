@@ -3,7 +3,7 @@ package be.plutus.api.dto.response;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
-import java.util.Date;
+import java.time.ZonedDateTime;
 
 @JsonPropertyOrder( {
         "index",
@@ -14,7 +14,7 @@ import java.util.Date;
         "created",
         "createdISO8601",
         "updated",
-        "updated8601"
+        "updatedISO8601"
 } )
 public class UserDTO{
 
@@ -23,8 +23,8 @@ public class UserDTO{
     private String lastName;
     private String username;
     private InstitutionDTO institution;
-    private Date created;
-    private Date updated;
+    private ZonedDateTime created;
+    private ZonedDateTime updated;
 
     public UserDTO(){
     }
@@ -69,29 +69,29 @@ public class UserDTO{
         this.institution = institution;
     }
 
-    public Date getCreated(){
+    public ZonedDateTime getCreated(){
         return created;
     }
 
-    public void setCreated( Date created ){
+    public void setCreated( ZonedDateTime created ){
         this.created = created;
     }
 
     @JsonFormat( pattern = "yyyy-MM-dd'T'HH:mm:ssZ" )
-    public Date getCreatedISO8601(){
+    public ZonedDateTime getCreatedISO8601(){
         return created;
     }
 
-    public Date getUpdated(){
+    public ZonedDateTime getUpdated(){
         return updated;
     }
 
-    public void setUpdated( Date updated ){
+    public void setUpdated( ZonedDateTime updated ){
         this.updated = updated;
     }
 
     @JsonFormat( pattern = "yyyy-MM-dd'T'HH:mm:ssZ" )
-    public Date getUpdatedISO8601(){
+    public ZonedDateTime getUpdatedISO8601(){
         return updated;
     }
 }

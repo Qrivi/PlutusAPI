@@ -3,7 +3,7 @@ package be.plutus.api.response;
 import be.plutus.core.model.currency.Currency;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
-import java.util.Date;
+import java.time.ZonedDateTime;
 
 @JsonPropertyOrder( {
         "status",
@@ -17,8 +17,8 @@ public class AccountMeta extends Meta{
     private String account;
     private Currency currency;
 
-    AccountMeta( int responseStatusCode, Date requestTimestamp, String account, Currency currency ){
-        super( responseStatusCode, requestTimestamp );
+    AccountMeta( int status, ZonedDateTime request, String account, Currency currency ){
+        super( status, request );
         this.account = account;
         this.currency = currency;
     }
@@ -47,7 +47,7 @@ public class AccountMeta extends Meta{
         }
 
         public Meta build(){
-            return new AccountMeta(statusCode, timestamp, account, currency);
+            return new AccountMeta( status, timestamp, account, currency);
         }
     }
 }

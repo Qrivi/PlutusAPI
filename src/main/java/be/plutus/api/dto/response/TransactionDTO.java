@@ -3,7 +3,7 @@ package be.plutus.api.dto.response;
 import be.plutus.core.model.transaction.TransactionType;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
-import java.util.Date;
+import java.time.ZonedDateTime;
 
 public class TransactionDTO{
 
@@ -13,7 +13,7 @@ public class TransactionDTO{
     private double amount;
     private TransactionType type;
     private LocationDTO location;
-    private Date timestamp;
+    private ZonedDateTime timestamp;
 
     public TransactionDTO(){
     }
@@ -66,16 +66,16 @@ public class TransactionDTO{
         this.location = location;
     }
 
-    public Date getTimestamp(){
+    public ZonedDateTime getTimestamp(){
         return timestamp;
     }
 
-    public void setTimestamp( Date timestamp ){
+    public void setTimestamp( ZonedDateTime timestamp ){
         this.timestamp = timestamp;
     }
 
     @JsonFormat( pattern = "yyyy-MM-dd'T'HH:mm:ssZ" )
-    public Date getTimestampISO8601(){
+    public ZonedDateTime getTimestampISO8601(){
         return timestamp;
     }
 }

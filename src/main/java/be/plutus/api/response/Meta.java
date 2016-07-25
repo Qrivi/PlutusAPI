@@ -1,9 +1,10 @@
 package be.plutus.api.response;
 
+import be.plutus.core.service.DateService;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
-import java.util.Date;
+import java.time.ZonedDateTime;
 
 @JsonPropertyOrder( {
         "status",
@@ -13,23 +14,23 @@ import java.util.Date;
 public class Meta{
 
     private int status;
-    private Date request;
+    private ZonedDateTime request;
 
-    Meta( int responseStatusCode, Date requestTimestamp ){
+    Meta( int status, ZonedDateTime requestTimestamp ){
+        this.status = status;
         this.request = requestTimestamp;
-        this.status = responseStatusCode;
     }
 
     public int getStatus(){
         return status;
     }
 
-    public Date getRequest(){
+    public ZonedDateTime getRequest(){
         return request;
     }
 
     @JsonFormat( pattern = "yyyy-MM-dd'T'HH:mm:ssZ" )
-    public Date getRequestISO8601(){
+    public ZonedDateTime getRequestISO8601(){
         return request;
     }
 
@@ -45,16 +46,8 @@ public class Meta{
         return new Meta.Builder().badRequest().build();
     }
 
-    public static Meta unauthorized(){
-        return new Meta.Builder().unauthorized().build();
-    }
-
     public static Meta forbidden(){
         return new Meta.Builder().forbidden().build();
-    }
-
-    public static Meta serverError(){
-        return new Meta.Builder().serverError().build();
     }
 
     public static Meta notFound(){
@@ -63,53 +56,53 @@ public class Meta{
 
     public static class Builder<B extends Meta.Builder<B>>{
 
-        protected Date timestamp;
-        protected int statusCode;
+        protected int status;
+        protected ZonedDateTime timestamp;
 
         public B success(){
-            this.timestamp = new Date();
-            this.statusCode = 200;
+            this.timestamp = DateService.now();
+            this.status = 200;
             return (B)this;
         }
 
         public B created(){
-            this.timestamp = new Date();
-            this.statusCode = 201;
+            this.timestamp = DateService.now();
+            this.status = 201;
             return (B)this;
         }
 
         public B badRequest(){
-            this.timestamp = new Date();
-            this.statusCode = 400;
+            this.timestamp = DateService.now();
+            this.status = 400;
             return (B)this;
         }
 
         public B unauthorized(){
-            this.timestamp = new Date();
-            this.statusCode = 401;
+            this.timestamp = DateService.now();
+            this.status = 401;
             return (B)this;
         }
 
         public B forbidden(){
-            this.timestamp = new Date();
-            this.statusCode = 403;
+            this.timestamp = DateService.now();
+            this.status = 403;
             return (B)this;
         }
 
         public B serverError(){
-            this.timestamp = new Date();
-            this.statusCode = 500;
+            this.timestamp = DateService.now();
+            this.status = 500;
             return (B)this;
         }
 
         public B notFound(){
-            this.timestamp = new Date();
-            this.statusCode = 404;
+            this.timestamp = DateService.now();
+            this.status = 404;
             return (B)this;
         }
 
         public Meta build(){
-            return new Meta(statusCode, timestamp);
+            return new Meta( status, timestamp );
         }
     }
 }

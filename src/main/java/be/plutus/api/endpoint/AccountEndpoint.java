@@ -1,9 +1,9 @@
 package be.plutus.api.endpoint;
 
-import be.plutus.api.endpoint.util.EndpointUtils;
 import be.plutus.api.dto.request.AccountCreateDTO;
 import be.plutus.api.dto.request.AccountRemoveDTO;
 import be.plutus.api.dto.request.AccountUpdateDTO;
+import be.plutus.api.endpoint.util.EndpointUtils;
 import be.plutus.api.response.Meta;
 import be.plutus.api.response.Response;
 import be.plutus.api.security.context.SecurityContext;

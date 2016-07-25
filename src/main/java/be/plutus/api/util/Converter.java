@@ -12,6 +12,7 @@ import be.plutus.core.model.location.Location;
 import be.plutus.core.model.token.Request;
 import be.plutus.core.model.token.Token;
 import be.plutus.core.model.transaction.Transaction;
+import be.plutus.core.service.DateService;
 
 public class Converter{
 
@@ -19,7 +20,7 @@ public class Converter{
         AccountDTO dto = new AccountDTO();
         dto.setEmail( account.getEmail() );
         dto.setCurrency( account.getDefaultCurrency() );
-        dto.setCreated( account.getCreationDate() );
+        dto.setCreated( DateService.convert( account.getCreationDate() ) );
         return dto;
     }
 
@@ -36,8 +37,8 @@ public class Converter{
         dto.setFirstName( user.getFirstName() );
         dto.setLastName( user.getLastName() );
         dto.setInstitution( institutionDTO );
-        dto.setCreated( user.getCreationDate() );
-        dto.setUpdated( user.getFetchDate() );
+        dto.setCreated( DateService.convert( user.getCreationDate() ) );
+        dto.setUpdated( DateService.convert( user.getFetchDate() ) );
         return dto;
     }
 
@@ -46,7 +47,7 @@ public class Converter{
         dto.setToken( token.getToken() );
         dto.setApplication( token.getApplicationName() );
         dto.setDevice( token.getDeviceName() );
-        dto.setExpires( token.getExpiryDate() );
+        dto.setExpires( DateService.convert( token.getExpiryDate() ) );
         return dto;
     }
 
@@ -64,8 +65,8 @@ public class Converter{
         dto.setApplication( token.getApplicationName() );
         dto.setDevice( token.getDeviceName() );
         dto.setIp( token.getRequestIp() );
-        dto.setCreated( token.getCreationDate() );
-        dto.setExpires( token.getExpiryDate() );
+        dto.setCreated( DateService.convert( token.getCreationDate() ) );
+        dto.setExpires( DateService.convert( token.getExpiryDate() ) );
         return dto;
     }
 
@@ -74,7 +75,7 @@ public class Converter{
         dto.setMethod( request.getMethod() );
         dto.setEndpoint( request.getEndpoint() );
         dto.setIp( request.getIp() );
-        dto.setTimestamp( request.getTimestamp() );
+        dto.setTimestamp( DateService.convert( request.getTimestamp() ) );
         return dto;
     }
 
@@ -116,7 +117,7 @@ public class Converter{
         dto.setDescription( transaction.getDescription() );
         dto.setType( transaction.getType() );
         dto.setLocation( locationDTO );
-        dto.setTimestamp( transaction.getTimestamp() );
+        dto.setTimestamp( DateService.convert( transaction.getTimestamp() ) );
         return dto;
     }
 }

@@ -1,15 +1,15 @@
 package be.plutus.api.endpoint;
 
 import be.plutus.api.config.Config;
-import be.plutus.api.endpoint.util.EndpointUtils;
 import be.plutus.api.dto.request.UserAuthenticationDTO;
 import be.plutus.api.dto.request.UserUCLLCreateDTO;
 import be.plutus.api.dto.request.UserUpdateDTO;
+import be.plutus.api.dto.response.TransactionDTO;
+import be.plutus.api.dto.response.UserDTO;
+import be.plutus.api.endpoint.util.EndpointUtils;
 import be.plutus.api.response.AccountMeta;
 import be.plutus.api.response.Meta;
 import be.plutus.api.response.Response;
-import be.plutus.api.dto.response.TransactionDTO;
-import be.plutus.api.dto.response.UserDTO;
 import be.plutus.api.response.UserMeta;
 import be.plutus.api.security.context.SecurityContext;
 import be.plutus.api.util.Converter;
@@ -23,6 +23,7 @@ import be.plutus.core.model.currency.Currency;
 import be.plutus.core.model.transaction.Transaction;
 import be.plutus.core.model.transaction.TransactionType;
 import be.plutus.core.service.AccountService;
+import be.plutus.core.service.DateService;
 import be.plutus.core.service.LocationService;
 import be.plutus.core.service.TransactionService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -223,7 +224,7 @@ public class UsersEndpoint{
 
         Meta meta = new UserMeta.Builder()
                 .user( user.getUsername() )
-                .updated( user.getFetchDate() )
+                .updated( DateService.convert( user.getFetchDate() ) )
                 .account( account.getEmail() )
                 .currency( currency )
                 .success()
@@ -279,7 +280,7 @@ public class UsersEndpoint{
 
         Meta meta = new UserMeta.Builder()
                 .user( user.getUsername() )
-                .updated( user.getFetchDate() )
+                .updated( DateService.convert( user.getFetchDate() ) )
                 .account( account.getEmail() )
                 .currency( currency )
                 .success()
@@ -318,7 +319,7 @@ public class UsersEndpoint{
 
         Meta meta = new UserMeta.Builder()
                 .user( user.getUsername() )
-                .updated( user.getFetchDate() )
+                .updated( DateService.convert( user.getFetchDate() ) )
                 .account( account.getEmail() )
                 .currency( currency )
                 .success()

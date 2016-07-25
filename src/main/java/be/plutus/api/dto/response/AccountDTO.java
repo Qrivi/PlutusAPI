@@ -3,13 +3,13 @@ package be.plutus.api.dto.response;
 import be.plutus.core.model.currency.Currency;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
-import java.util.Date;
+import java.time.ZonedDateTime;
 
 public class AccountDTO{
 
     private String email;
     private Currency currency;
-    private Date created;
+    private ZonedDateTime created;
 
     public AccountDTO(){
     }
@@ -30,16 +30,16 @@ public class AccountDTO{
         this.currency = currency;
     }
 
-    public Date getCreated(){
+    public ZonedDateTime getCreated(){
         return created;
     }
 
-    public void setCreated( Date created ){
+    public void setCreated( ZonedDateTime created ){
         this.created = created;
     }
 
     @JsonFormat( pattern = "yyyy-MM-dd'T'HH:mm:ssZ" )
-    public Date getCreatedISO8601(){
+    public ZonedDateTime getCreatedISO8601(){
         return created;
     }
 }

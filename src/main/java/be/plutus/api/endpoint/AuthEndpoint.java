@@ -1,7 +1,7 @@
 package be.plutus.api.endpoint;
 
-import be.plutus.api.endpoint.util.EndpointUtils;
 import be.plutus.api.dto.request.AuthenticationDTO;
+import be.plutus.api.endpoint.util.EndpointUtils;
 import be.plutus.api.response.Meta;
 import be.plutus.api.response.Response;
 import be.plutus.api.util.Converter;

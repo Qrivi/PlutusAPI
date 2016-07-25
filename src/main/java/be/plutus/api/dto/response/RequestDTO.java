@@ -2,14 +2,14 @@ package be.plutus.api.dto.response;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
-import java.util.Date;
+import java.time.ZonedDateTime;
 
 public class RequestDTO{
 
     private String method;
     private String endpoint;
     private String ip;
-    private Date timestamp;
+    private ZonedDateTime timestamp;
 
     public RequestDTO(){
     }
@@ -38,16 +38,16 @@ public class RequestDTO{
         this.ip = ip;
     }
 
-    public Date getTimestamp(){
+    public ZonedDateTime getTimestamp(){
         return timestamp;
     }
 
-    public void setTimestamp( Date timestamp ){
+    public void setTimestamp( ZonedDateTime timestamp ){
         this.timestamp = timestamp;
     }
 
     @JsonFormat( pattern = "yyyy-MM-dd'T'HH:mm:ssZ" )
-    public Date getTimestampISO8601(){
+    public ZonedDateTime getTimestampISO8601(){
         return timestamp;
     }
 }
